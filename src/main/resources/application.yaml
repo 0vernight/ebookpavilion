@@ -1,0 +1,8 @@
+spring:
+  banner:
+    image:
+#      location: static/favicon.ico
+#      bitdepth: 4
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

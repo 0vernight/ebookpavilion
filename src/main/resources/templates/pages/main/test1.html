@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style>
+        .col-color{
+            background: lawngreen;
+        }
+    </style>
+    <script>
+        $(document).ready( function () {
+            message('这是一条消息提示');
+        })
+    </script>
+</head>
+<body>
+<el-container>
+    <el-row>
+        <el-col :span="24">
+            <div class="grid-content col-color"></div>
+        </el-col>
+    </el-row>
+
+</el-container>
+</body>
+</html>

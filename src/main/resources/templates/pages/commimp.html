@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="keywords" content="admin, dashboard, bootstrap, template, flat, modern, theme, responsive, fluid, retina, backend, html5, css, css3">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+<!--    <link rel="shortcut icon" href="#" type="image/png"> 就是因为这个破语句我浪费了两天时间-->
+
+    <!--common-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet">
+
+<!--    我的css-->
+    <link href="css/mike.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js" th:src="@{js/html5shiv.js}"></script>
+    <script src="js/respond.min.js" th:src="@{js/respond.min.js}"></script>
+    <![endif]-->
+<!--    aike帮我弄的我后来没有用-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+
+</head>
+<body>
+
+<div th:fragment="scrallpages">
+
+    <!-- Placed js at the end of the document so the pages load faster -->
+    <script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/jquery.nicescroll.js"></script>
+
+    <script src="js/modernizr.min.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!--common scripts for all pages-->
+    <script src="js/scripts.js"></script>
+
+
+</div>
+</body>
+</html>

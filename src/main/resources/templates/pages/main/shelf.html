@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>shelf</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+
+        function rmbook(id,name) {
+            var id = "id=" + id;
+            if (confirm("你确定删除《"+name+"》这本书吗？")){
+                axios({
+                    url: '/removeBook',
+                    method: 'post',
+                    data: id
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        alert(res.data.message);
+                        window.location.href = "toShelf";
+                    } else if (res.data.code == 201) {
+                        alert(res.data.message)
+                    } else if (res.data.code == 202) {
+                        alert(res.data.message)
+                        window.location.href = "/toLogin";
+                        // newpage.location.href='/toLogin'
+                    }
+                    // alert(res.data.code);
+                }).catch(err => {
+                    console(err.data);
+                })
+            }
+
+        }
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <div th:replace="pages/commhead::commnav"></div>
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="main-content">
+
+    <!-- page heading start-->
+    <div class="page-heading">
+        <h3>
+            我的书架 <small>读书</small>
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">其他操作  </a>
+            </li>
+            <li>
+                <a href="#">清空书架  </a>
+            </li>
+            <li class="active">Blog List</li>
+        </ul>
+    </div>
+    <!-- page heading end-->
+
+    <strong class="col-md-offset-5" th:if="${pageInfo==null}" style="font-size: 24px;">~~~你的书架是空的哦~~~</strong>
+    <!--body wrapper start-->
+    <div class="wrapper blog">
+        <div class="row col-ms-offset-1 col-md-offset-1">
+            <div class="panel col-md-2 col-sm-2" style="margin: 10px" th:each="book,status:${pageInfo==null?pageInfo:pageInfo.list}">
+                <div class="panel-body">
+                    <a th:href="@{/toDetail(id=${book.id})}">
+                        <div class="blog-img-narrow">
+                            <img th:src="${(book.cover)==null?'images/blog/blog-wide-img.jpg':book.cover}" alt="封面">
+                        </div>
+                        <h1 class="">[[${book.name}]]</h1>
+                        <p class="">
+                            WB:[[${book.author}]] | [[${book.pubyear}]]| 下载:[[${book.downloadTimes}]]<br>
+                            &nbsp;&nbsp;<span th:text="${#strings.abbreviate(book.brief,25)}" th:title="${book.brief}"></span><br>
+                        </p>
+                    </a>
+                    <a href="##"><li class="fa fa-code-fork"></li></a>
+                    <a href="#" class="more">Continue Reading</a>
+                    <button th:onclick="rmbook([[${book.id}]],[[${book.name}]])" class="pull-right">
+                        <i class="fa fa-minus">删除</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center col-md-12">
+            <ul class="pagination blog-pagination">
+
+                <li><a th:href="@{/toShelf}" >首页</a></li>
+                <li><a th:href="@{/toShelf(pageNum=${pageInfo==null?'false':pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}" >前一页</a></li>
+                <li><a href="">当前第[[${pageInfo==null?'1':pageInfo.pageNum}]]页，总[[${pageInfo==null?'1':pageInfo.pages}]]页，共[[${pageInfo==null?'0':pageInfo.total}]]条记录</a></li>
+                <li><a th:href="@{/toShelf(pageNum=${pageInfo==null?'false':pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo==null?'1':pageInfo.pages})}">后一页</a></li>
+            </ul>
+
+        </div>
+    </div>
+    <!--body wrapper end-->
+
+
+</div>
+<!-- main content end-->
+
+<!--common scripts for all pages-->
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+
+<!--Sparkline Chart-->
+<script src="js/sparkline/jquery.sparkline.js"></script>
+<script src="js/sparkline/sparkline-init.js"></script>
+
+
+</body>
+</html>

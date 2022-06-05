@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mike.mapper.CommentMapper">
+    <sql id="criteria">
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="formId!= null">
+            and form_id = #{formId}
+        </if>
+        <if test="userId!=null">
+            and user_id = #{userId}
+        </if>
+        <if test="bookId!=null">
+            and book_id = #{bookId}
+        </if>
+        <if test="content!=null">
+            and content = #{content}
+        </if>
+        <if test="commentImg!=null">
+            and comment_img = #{commentImg}
+        </if>
+        <if test="createTime!=null">
+            and create_time = #{createTime}
+        </if>
+    </sql>
+    <resultMap id="resultMap" type="com.mike.bean.Comment">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <sql id="base_Column_list">
+        id
+        , form_id, user_id, book_id, content, comment_img, create_time
+    </sql>
+
+    <sql id="insert_column_list">
+        #{id}
+        ,
+        #{formId},
+        #{userId},
+        #{bookId},
+        #{content},
+        #{commentImg},
+        #{createTime}
+    </sql>
+
+    <sql id="table">
+        comment
+    </sql>
+    <insert id="insertCmmt" parameterType="com.mike.bean.Comment">
+        insert into
+        <include refid="table"></include>
+        (<include refid="base_Column_list"></include>)
+        values (<include refid="insert_column_list"></include>)
+    </insert>
+
+    <select id="selectAll" resultType="com.mike.bean.Comment">
+        select <include refid="base_Column_list"></include> from
+        <include refid="table"></include>
+        <where>
+            <include refid="criteria"></include>
+        </where>
+
+    </select>
+
+    <!--    <select id="selectAll" resultType="com.mike.bean.User">-->
+    <!--        select * from <include refid="table"/>-->
+    <!--       <where>-->
+    <!--            <include refid="criteria"/> and id=-->
+    <!--       </where>-->
+
+    <!--    </select>-->
+
+    <!--    <select id="test" parameterType="list">-->
+    <!--        select <include refid="base_Column_list"/>-->
+    <!--        from <include refid="table"/>-->
+    <!--        where-->
+    <!--        <foreach collection="list" item="item" index="index" open="(" close=")" separator="or">-->
+    <!--            id = #{item}-->
+    <!--        </foreach>-->
+    <!--    </select>-->
+</mapper>

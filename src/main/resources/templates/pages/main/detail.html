@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:hh="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>detail</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+
+        function addshelf(id) {
+            var id = "id=" + id;
+
+            axios({
+                url: '/shelf/add',
+                method: 'post',
+                data: id
+            }).then(res => {
+                if (res.data.code == 200) {
+                    alert(res.data.message);
+                } else if (res.data.code == 201) {
+                    alert(res.data.message)
+                } else if (res.data.code == 202) {
+                    alert(res.data.message)
+                    window.location.href = "/toLogin";
+                    // newpage.location.href='/toLogin'
+                }
+                // alert(res.data.code);
+            }).catch(err => {
+                console(err.data);
+            })
+
+        }
+
+        function download(file) {
+            // alert(file+"/book");
+            // file='bookName='+file;
+
+            if (confirm("你确定要下载码？")){
+                // prompt("hahah");
+                if (user==null){
+                    if (confirm("你还没登录，登陆后再下载！"))
+                        window.location.href="/toLogin"
+                }else {
+                    window.location.href=file;
+                }
+            }
+
+        }
+        function collect(id){
+            alert("敬请期待。。。");
+        }
+        function cmmt(id){
+            var user=/*[[${session.user}]]*/
+            var formdata=new FormData($( "#cmnt-form")[0] );
+
+            /*下面两句也可以获得form的值
+            var o1 = $('#cmnt-form').serializeArray();
+            var o = $('#cmnt-form').serialize();
+            alert(o);
+            */
+
+
+            if(user==null){
+                if (confirm("发表评论需要登录你确定要登录吗？")){
+                    window.location.href='/toLogin';
+                }
+            }else {
+                axios({
+                    url: '/addComment',
+                    method: 'post',
+                    data: formdata
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        alert(res.data.message)
+                        window.location.href = '/toDetail?id='+id;
+                    } else if (res.data.code == 201) {
+                        alert(res.data.message)
+                    } else if (res.data.code == 202) {
+                        alert(res.data.message)
+                    }
+                }).catch(err => {
+                    console(err.data);
+                })
+            }
+
+        }
+
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <div th:replace="pages/commhead::commnav"></div>
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="">
+
+    <!-- page heading start-->
+    <div class="page-heading">
+        <h3>
+            Blog List <small>Subtext for header</small>
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li>
+                <a href="#">Extra Pages</a>
+            </li>
+            <li class="active">Blog List</li>
+        </ul>
+    </div>
+    <!-- page heading end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <div class="row blog">
+            <div class="col-md-3">
+                <div class="panel">
+                    <div class="panel-body">
+                        <input type="text" placeholder="Search ..." class="form-control blog-search">
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="blog-post">
+                            <h3>你可能感兴趣的书籍</h3>
+
+                            <div class="media" th:each="book,status:${recommends}">
+                                <a th:href="@{/toDetail(id=${book.id})}" class="pull-left">
+                                    <img class="recommendsimg" alt=""
+                                         th:src="${(book.cover)==null?'images/blog/blog-thumb-1.jpg':book.cover}">
+                                </a>
+                                <div class="media-body">
+                                    <a th:href="@{/toDetail(id=${book.id})}">
+                                        <h5 class="media-heading">[[${book.name}]]_  <small>[[${book.author}]]</small> </h5>
+                                        <p th:text="${#strings.abbreviate(book.brief,50)}" th:title="${book.brief}"></p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <a href="javascript:;" class="pull-left">
+                                    <img alt="" src="images/blog/blog-thumb-2.jpg" class=" ">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="media-heading"><a href="javascript:;">02 May 2013 </a></h5>
+                                    <p>
+                                        Donec id elit non mi porta gravida at eget metus amet int
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <a href="javascript:;" class="pull-left">
+                                    <img alt="" src="images/blog/blog-thumb-3.jpg" class=" ">
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="media-heading"><a href="javascript:;">02 May 2013 </a></h5>
+                                    <p>
+                                        Donec id elit non mi porta gravida at eget metus amet int
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="blog-post">
+                            <h3>category</h3>
+                            <ul>
+                                <li><a href="javascript:;"><i class="  fa fa-angle-right"></i> Animals</a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-angle-right"></i> Landscape</a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-angle-right"></i> Portait</a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-angle-right"></i> Wild Life</a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-angle-right"></i> Video</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="blog-post">
+                            <h3>recent comments</h3>
+                            <ul>
+                                <li><a href="javascript:;"><i class="  fa fa-comments-o"></i> admin on Vestiblulum quis
+                                    dolor </a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-comments-o"></i> admin on Nam sed arcu
+                                    tellus</a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-comments-o"></i> monster002 on Fringilla ut
+                                    vel ipsum </a></li>
+                                <li><a href="javascript:;"><i class="  fa fa-comments-o"></i> admin on Vestiblulum quis
+                                    dolor sit</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="blog">
+                    <div class="single-blog">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <h1 class="text-center mtop35"><a href="#">[[${book.name}]]</a></h1>
+                                <p class="text-center auth-row">
+                                    By <a href="#">[[${book.author}]]</a> | [[${book.pubyear}]] | <a href="#">[[${book.type}]]类型</a>
+                                </p>
+                                <div class="blog-img-wide">
+                                    <img th:src="${(book.cover)==null?'images/blog/blog-wide-img.jpg':book.cover}"
+                                         alt="">
+                                </div>
+                                <p><h4>简介：</h4>
+                                    &nbsp;&nbsp;[[${book.brief}]]
+                                </p>
+                                <p><h4>内容：</h4>
+                                    下面就是显示书的内容了：i have no time to write this part ,but its verery important function of my task.
+                                </p>
+                                <p>
+                                    consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut
+                                    labore et dolore magnam aliquam quaerat voluptatem.
+
+                                </p>
+
+                                <blockquote>
+                                    <p>
+                                        [[${book.downloadTimes}]] Times downloads |<a href="#"> 5 Comments</a>
+                                    </p>
+                                </blockquote>
+                                <div class="blog-tags">
+                                    TAGS <a href="#">photoshop</a> <a href="#">illustrator</a> <a href="#">adobe</a> <a
+                                        href="#">theme</a>
+                                    <div class="pull-right tag-social">
+                                        <a href="#" class="btn btn-share pull-right">Share</a>
+
+                                        <ul class="social-links pull-right">
+                                            <li th:onclick="addshelf([[${book.id}]])"><a title="" data-placement="top"
+                                                                                         data-toggle="tooltip"
+                                                                                         class="tooltips"
+                                                                                         data-original-title="addshelf"><i
+                                                    class="fa fa-plus">加入书架 </i></a>
+                                            </li>
+                                            <li th:onclick="download([[${book.file}]])"><a title="" data-placement="top"
+                                                                                         data-toggle="tooltip"
+                                                                                         class="tooltips"
+                                                                                         data-original-title="download"><i
+                                                    class="fa fa-download">下到本地 </i></a>
+                                            </li>
+                                            <li th:onclick="collect([[${book.id}]])"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                                   data-original-title="Twitter"><i class="fa fa-star">其他功能 </i></a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-body ">
+                                <div class="media blog-cmnt" th:if="${session.user==null}">
+                                    <a href="#跳转到他的论坛页面内" class="pull-left">
+                                        <img alt="" src="images/blog/blog-avatar.jpg" class="media-object">
+                                    </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">
+                                            <a href="#">Default</a>
+                                        </h4>
+                                        <p class="mp-less">
+                                            这是一个默认的评论，登录之后你就能看到更多的精彩的评论.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel" th:if="${session.user!=null}">
+                            <div class="panel-body">
+                                <h1 class="text-center cmnt-head">[[${comments.size()}]]  条评论</h1>
+                                <div class="media blog-cmnt" th:each="comment,st:${comments}">
+                                    <a href="javascript:;" class="pull-left">
+                                        <img alt="" th:src="${comment.userImage==null?'images/blog/blog-avatar-2.jpg':comment.userImage}" src="images/blog/blog-avatar-2.jpg" class="media-object">
+                                    </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">
+                                            <a href="#">[[${comment.username}]]</a>
+                                        </h4>
+                                        <div class="bl-status">
+                                            <span class="pull-left" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd hh:mm')}"></span>
+                                            <a href="#" class="pull-right reply">Reply</a>
+                                        </div>
+                                        <p class="mp-less">
+                                            &nbsp;&nbsp;[[${comment.content}]]
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-body">
+                                <h1 class="text-center cmnt-head ">Leave a Comments</h1>
+                                <p class="text-center fade-txt">If you want fast go alone want far go together <a href="#">Cancel Reply</a></p>
+
+                                <form id="cmnt-form" role="form" class="form-horizontal leave-cmnt">
+
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="hidden" name="id" class="col-lg-12 form-control" placeholder="  ">
+                                            <input type="hidden" name="formId" class="col-lg-12 form-control" placeholder="  ">
+                                            <input type="hidden" th:value="${user.id}" name="userId" class="col-lg-12 form-control" placeholder="  ">
+                                            <input type="hidden" th:value="${book.id}" name="bookId" class="col-lg-12 form-control" placeholder="  ">
+                                            <input type="hidden" name="commentImg" class="col-lg-12 form-control" placeholder="  ">
+                                            <input type="hidden" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd hh:mm:ss')}" name="createTime" class="col-lg-12 form-control" placeholder="  ">
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <textarea name="content" class=" form-control" rows="8" placeholder="Message"></textarea>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <button th:onclick="cmmt([[${book.id}]])" class="btn btn-post-cmnt pull-right" type="button">Post Comment</button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--body wrapper end-->
+
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+
+
+    </div>
+    <!--body wrapper end-->
+
+</div>
+<!-- main content end-->
+
+<!--common scripts for all pages-->
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+
+<!--Sparkline Chart-->
+<script src="js/sparkline/jquery.sparkline.js"></script>
+<script src="js/sparkline/sparkline-init.js"></script>
+
+
+</body>
+</html>

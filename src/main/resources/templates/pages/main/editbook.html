@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>book</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+
+        function editbook() {
+            var formdata = new FormData($("#alterbookform")[0]);
+            // alert("出现了="+$("#password").val()+"=");
+            axios({
+                url: '/alterBook',
+                method: 'post',
+                data: formdata
+            }).then(res => {
+                if (res.data.code == 200) {
+                    alert(res.data.message)
+                    window.location.href = "/toBook";
+                } else if (res.data.code == 201) {
+                    alert(res.data.message)
+                    // alert("注册失败！原因已经存在数据库当中了，请直接登录");
+                } else if (res.data.code == 202) {
+                    alert(res.data.message)
+                }
+                // alert(res.data.code);
+            }).catch(err => {
+                console(err.data);
+            })
+        }
+        function canclebtn(){
+            if (confirm("你确定放弃修改吗？")){
+                window.location.href='/toBook';
+            }
+        }
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <!--    <div th:replace="pages/commhead::commnav"></div>-->
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="main-content">
+
+    <div class="row center-block">
+        <div class="col-md-offset-2 col-md-8">
+            <section class="panel">
+                <header class="panel-heading">
+                    上传书籍
+                </header>
+                <div class="panel-body">
+                    <form id="alterbookform" role="form">
+                        <div class="form-group">
+                            <label for="type">类型</label>
+                            <input type="text" name="type" class="form-control" id="type" th:value="${book.type}"
+                                   placeholder="输入书的类型">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">书名</label>
+                            <input type="text" name="name" class="form-control" id="name" th:value="${book.name}"
+                                   placeholder="输入书的名字">
+                        </div>
+                        <div class="form-group">
+                            <label for="author">作者</label>
+                            <input type="text" name="author" class="form-control" id="author" th:value="${book.author}"
+                                   placeholder="输入作者名">
+                        </div>
+                        <div class="form-group">
+                            <label for="press">出版社</label>
+                            <input type="text" name="press" class="form-control" id="press" th:value="${book.press}"
+                                   placeholder="输入出版社">
+                        </div>
+                        <div class="form-group">
+                            <label for="pubyear">出版年份</label>
+                            <input type="date" name="pubyear" class="form-control" id="pubyear"
+                                   th:value="${book.pubyear}" placeholder="输入出版年份">
+                        </div>
+                        <div class="form-group">
+                            <label for="wordNum">总字数</label>
+                            <input type="number" name="wordNum" class="form-control" id="wordNum"
+                                   th:value="${book.wordNum}" placeholder="输入总字数">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brief" class="control-label">简介 </label>
+                            <textarea rows="6" name="brief" class="col-sm-10 form-control" th:text="${book.brief}"
+                                      id="brief"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="cov">书的封面
+                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                    <img th:src="@{${book.cover}}" class="recommendsimg" alt=""/>
+                                </div>
+                            </label>
+                            <input type="file" name="coverfile" id="cov" class="default form-control"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="InFile" class="control-label">选择书籍
+                                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">[[${book.file}]]
+                                    <img src="" alt=""/>
+                                </div>
+                            </label>
+                            <input type="file" name="bookfile" id="InFile">
+                            <input type="hidden" name="id" class="form-control" id="id" th:value="${book.id}">
+                            <input type="hidden" name="cover" class="form-control" id="cover" th:value="${book.cover}">
+                            <input type="hidden" name="file" class="form-control" id="file" th:value="${book.file}">
+                            <p class="help-block">Example block-level help text here.</p>
+                        </div>
+
+                        <div class="text-center form-group">
+                            <button type="button" onclick="editbook()" class="btn btn-primary ">提交</button>
+                            <button type="reset" class="btn btn-primary ">重置</button>
+                            <button type="button" th:onclick="canclebtn()" class="btn btn-primary ">取消</button>
+                        </div>
+                        <div class="checkbox">
+                            <label class="text-center">
+                                <input type="checkbox"> 同意协议
+                            </label>
+                        </div>
+                    </form>
+
+                </div>
+            </section>
+        </div>
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+
+        </div>
+        <!--body wrapper end-->
+
+    </div>
+    <!-- main content end-->
+
+    <!--common scripts for all pages-->
+    <div th:insert="pages/commimp::scrallpages"></div>
+
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <title>Profile</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+        // var user =/*[[${session.user}]]*/{};
+        function upf() {
+
+            var formdata=new FormData($( "#formupload")[0] );
+            // alert("出现了"+formdata);
+            axios({
+                url:'/updateavatar',
+                method:'post',
+                data:formdata
+            }).then(res=>{
+                if (res.data.code==200){
+                    alert(res.data.data.avatar);
+                    $('#img-ava').attr("src", res.data.data.avatar);
+                    // $('#img-ava').src=res.data.data.avatar
+                    alert("头像更改成功"+u+res.data.data);
+                    // window.location.href="/toLogin";
+                }else if (res.data.code==201){
+                    alert(res.data.message)
+                }else if (res.data.code==202){
+                    alert("注册失败！原因输入有误！");
+                }
+                // alert(res.data.code);
+            }).catch(err=>{
+                console(err.data);
+            })
+        }
+
+
+
+    </script>
+</head>
+
+<body class="">
+<!-- header section start-->
+<div th:replace="pages/commhead::commnav"></div>
+<!-- header section end-->
+
+
+<!-- header section start -->
+<div class="">
+    <img src="/images/login-bg.jpg" class="profile-bgpic">
+    <ul class="nav nav-pills p-option col-md-offset-4">
+        <li class="active">
+            <a href="#"><i class="fa fa-user">用户信息</i></a>
+        </li>
+        <li>
+            <a href="/toSeting"><i class="fa fa-gear">设置</i></a>
+        </li>
+        <li>
+            <a href="#"><i class="fa  fa-book"></i></a>
+        </li>
+<!--        <li>-->
+<!--            <a href="#"><i class="fa fa-meh-o"></i></a>-->
+<!--        </li>-->
+    </ul>
+</div>
+    <!-- main content start-->
+    <div class="main-content" >
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="profile-pic text-center" >
+                                        <!--上传头像表单开始-->
+                                        <form id="formupload" class="form-horizontal">
+                                            <label for="avatar"><img id="img-ava" alt="用户头像" th:src="${user.getAvatar()==null?'images/photos/user1.png':user.getAvatar()}" ></label>
+                                            <input type="file" class="col-md-offset-2" name="file" id="avatar" placeholder="点击头像修改">
+                                            <input onclick="upf()" type="button" class="btn btn-primary" value="上传" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <ul class="p-info">
+                                        <li>
+                                            <div class="title">用户名</div>
+                                            <div class="desk">[[${user.username}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">昵称</div>
+                                            <div class="desk">[[${user.nickname}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">邮箱</div>
+                                            <div class="desk">[[${user.email}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">手机号</div>
+                                            <div class="desk">[[${user.phone}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">年龄</div>
+                                            <div class="desk">[[${user.age}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">性别</div>
+                                            <div class="desk">[[${user.sex}]]</div>
+                                        </li>
+                                        <li>
+                                            <div class="title">生日</div>
+                                            <div class="desk" th:text="${#dates.format(user.birthDay,'yyyy-MM-dd')}"></div>
+                                        </li>
+                                        <li>
+                                            <div class="title">住址</div>
+                                            <div class="desk">[[${user.address}]]</div>
+                                        </li>
+                                    </ul>
+                                    <a th:href="@{/toalterProfile(id=${user.id})}" class="btn btn-post pull-right">修改用户信息</a>
+                                </div>
+                                <form>
+                                    <textarea class="form-control input-lg p-text-area" rows="2" placeholder="Whats in your mind today?"></textarea>
+                                </form>
+                                <footer class="panel-footer">
+                                    <button class="btn btn-post pull-right">Post</button>
+                                    <ul class="nav nav-pills p-option">
+                                        <li>
+                                            <a href="#"><i class="fa fa-user"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="fa fa-gears"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="fa  fa-location-arrow"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><i class="fa fa-meh-o"></i></a>
+                                        </li>
+                                    </ul>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <div class="profile-desk">
+                                        <h1>john doe</h1>
+                                        <span class="designation"><阅读者></阅读者></span>
+                                        <p>
+                                            我已经阅读了 本书，它们分别是：
+                                        </p>
+                                        <a class="btn p-follow-btn pull-left" href="#"> <i class="fa fa-check"></i> Following</a>
+
+                                        <ul class="p-social-link pull-right">
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-facebook"></i>
+                                                </a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="#">
+                                                    <i class="fa fa-twitter"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-google-plus"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <header class="panel-heading">
+                                    recent comment
+                                    <span class="tools pull-right">
+                                        <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                        <a class="fa fa-times" href="javascript:;"></a>
+                                     </span>
+                                </header>
+                                <div class="panel-body">
+                                    <ul class="activity-list">
+                                        <li>
+                                            <div class="avatar">
+                                                <img src="images/photos/user1.png" alt=""/>
+                                            </div>
+                                            <div class="activity-desk">
+                                                <h5><a href="#">Jonathan Smith</a> <span>Uploaded 5 new photos</span></h5>
+                                                <p class="text-muted">7 minutes ago near Alaska, USA</p>
+                                                <div class="album">
+                                                    <a href="#">
+                                                        <img alt="" src="images/gallery/image1.jpg">
+                                                    </a>
+                                                    <a href="#">
+                                                        <img alt="" src="images/gallery/image2.jpg">
+                                                    </a>
+                                                    <a href="#">
+                                                        <img alt="" src="images/gallery/image3.jpg">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="avatar">
+                                                <img src="images/photos/user2.png" alt=""/>
+                                            </div>
+                                            <div class="activity-desk">
+                                                <h5><a href="#">John Doe</a> <span>Completed the Sight visit.</span></h5>
+                                                <p class="text-muted">2 minutes ago near Alaska, USA</p>
+                                                <div class="location-map">
+                                                    <div id="map-canvas"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--body wrapper end-->
+
+    </div>
+    <!-- main content end-->
+
+<!--common scripts for all pages-->
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+
+
+
+<!--Sparkline Chart-->
+<script src="js/sparkline/jquery.sparkline.js"></script>
+<script src="js/sparkline/sparkline-init.js"></script>
+
+<!--google map-->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&AMP;sensor=false"></script>
+
+
+
+<script>
+
+    //google map
+    function initialize() {
+        var myLatlng = new google.maps.LatLng(-37.815207, 144.963937);
+        var mapOptions = {
+            zoom: 15,
+            scrollwheel: false,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Hello World!'
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
+</body>
+</html>

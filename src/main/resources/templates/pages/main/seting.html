@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+  <title>setting</title>
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+        // var user =/*[[${session.user}]]*/{};
+        function upf() {
+
+            var formdata=new FormData($( "#formupload")[0] );
+            // alert("出现了"+formdata);
+            axios({
+                url:'/ss',
+                method:'post',
+                data:formdata
+            }).then(res=>{
+                if (res.data.code==200){
+                    $('#img-ava').attr("src", res.data.data.avatar);
+                    alert(""+u+res.data.data);
+                    // window.location.href="/toLogin";
+                }else if (res.data.code==201){
+                    alert(res.data.message)
+                }else if (res.data.code==202){
+                    alert("输入有误！");
+                }
+                // alert(res.data.code);
+            }).catch(err=>{
+                console(err.data);
+            })
+        }
+
+
+
+    </script>
+</head>
+
+<body class="">
+
+<section>
+
+    <!-- main content start-->
+    <div class="main-content" >
+
+
+        <!-- page heading start-->
+        <div class="page-heading">
+            <h3>
+                设置页面
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#">Components</a>
+                </li>
+                <li class="active"> Tree View </li>
+            </ul>
+        </div>
+        <!-- page heading end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+                <div class="col-md-10">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            Tree Style #4
+                          <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="FlatTree4" class="tree tree-solid-line">
+                                <div class = "tree-folder" style="display:none;">
+                                    <div class="tree-folder-header">
+                                        <i class="fa fa-folder"></i>
+                                        <div class="tree-folder-name"></div>
+                                    </div>
+                                    <div class="tree-folder-content"></div>
+                                    <div class="tree-loader" style="display:none"></div>
+                                </div>
+                                <div class="tree-item" style="display:none;">
+                                    <i class="tree-dot"></i>
+                                    <div class="tree-item-name"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!--body wrapper end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.nicescroll.js"></script>
+
+<!--tree-->
+<script src="js/fuelux/js/tree.min.js"></script>
+<script src="js/tree-init.js"></script>
+
+<!--common scripts for all pages-->
+<script src="js/scripts.js"></script>
+
+
+
+<script>
+    jQuery(document).ready(function() {
+        TreeView.init();
+    });
+</script>
+
+</body>
+</html>

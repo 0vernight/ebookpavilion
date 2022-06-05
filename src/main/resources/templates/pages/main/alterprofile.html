@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Registration</title>
+
+    <link th:include="pages/commimp::head">
+
+    <script type="text/javascript" th:inline="javascript">
+
+        function fun(){
+            var formdata=new FormData($( "#signupForm")[0] );
+            // alert("出现了"+formdata);
+            axios({
+                url:'/alterProfile',
+                method:'post',
+                data:formdata
+            }).then(res=>{
+                if (res.data.code==200){
+                    alert(res.data.message);
+                    window.location.href="/toProfile";
+                }else if (res.data.code==201){
+                    alert(res.data.message)
+
+                }else if (res.data.code==202){
+                    alert("原因输入有误！");
+                }
+                // alert(res.data.code);
+            }).catch(err=>{
+                console(err.data);
+            })
+        }
+        function birth(date){
+            // alert(date)
+            var age=date.replace(/\-/g, "/");
+            var d1=new Date(age);
+            var d2=new Date();
+
+            // alert(parseInt(d2 - d1) / 1000 / 3600 / 24 / 365);
+            $("#age").val(parseInt((d2 - d1) / 1000 / 3600 / 24 / 365));
+
+        }
+
+    </script>
+</head>
+
+<body class="aprofile-body">
+
+<div class="">
+
+<!--    -->
+    <form id="signupForm" class="form-signin" >
+        <div class="form-signin-heading text-center">
+            <h1 class="sign-title">用户修改个人信息</h1>
+<!--            <img src="images/log-logo.png" alt="logo"/>-->
+        </div>
+
+
+        <div class="login-wrap">
+            <p>[[${msg}]]</p>
+            <p>输入您要更改的个人信息</p>
+            <input type="hidden" id="id" th:value="${user.id}" name="id" class="form-control">
+            <input type="text" id="nickname" th:value="${user.nickname}" name="nickname" autofocus placeholder="昵称" class="form-control">
+            <input type="text" id="email" th:value="${user.email}" name="email" disabled placeholder="邮箱" class="form-control">
+            <div class="radios">
+                <label for="radio-01" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" th:checked="${user.sex=='男'}" value="男" id="radio-01" name="sex"> 男
+                </label>
+                <label for="radio-02" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" th:checked="${user.sex=='女'}" value="女" id="radio-02" name="sex"> 女
+                </label>
+                <label for="radio-03" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" th:checked="${user.sex=='保密'}" value="保密" id="radio-03" name="sex"> 保密
+                </label>
+            </div>
+<!--            <p>输入您的帐户详细信息如下</p>-->
+            <input type="text" name="phone" th:value="${user.phone}" placeholder="电话" class="form-control">
+            <input type="text" name="age" id="age" th:value="${user.age}" placeholder="年龄" class="form-control">
+            <input type="text" name="address" th:value="${user.address}" placeholder="地址" class="form-control">
+            <input type="date" name="birthDay" onblur="birth(this.value)" th:value="${#dates.format(user.birthDay,'yyyy-MM-dd')}" placeholder="生日" class="form-control">
+
+
+            <label class="checkbox">
+                <input type="checkbox" value="agree this condition"> 我同意服务条款和隐私政策
+            </label>
+            <button type="button" onclick="fun()" id="submit" class="btn btn-lg btn-login btn-block">
+                <i class="fa fa-check"></i>
+            </button>
+
+            <div class="registration">
+                修改好了。
+                <a href="/toProfile" class="">
+                    返回个人页
+                </a>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+</body>
+</html>

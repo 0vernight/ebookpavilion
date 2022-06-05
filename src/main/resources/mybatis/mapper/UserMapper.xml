@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mike.mapper.UserMapper">
+    <sql id="criteria">
+        <if test="name != null">
+            and name = #{name}
+        </if>
+        <if test="email!= null">
+            and email = #{email}
+
+        </if>
+    </sql>
+    <resultMap id="resultMap" type="com.mike.bean.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+    </resultMap>
+
+    <sql id="base_Column_list">
+        id
+        ,username,age
+    </sql>
+
+    <sql id="insert_column_list">
+        #{id}
+        ,
+        #{username}
+    </sql>
+
+    <sql id="table">
+        user
+    </sql>
+    <insert id="test1">
+        insert into<include refid="table"/>(<include refid="base_Column_list"/>)
+        values (<include refid="insert_column_list"/>)
+    </insert>
+    <select id="selectAll" resultType="com.mike.bean.User">
+        select * from
+        <include refid="table"/>
+        <!--       <where>-->
+        <!--            <include refid="criteria"/> and id=-->
+        <!--       </where>-->
+
+    </select>
+
+    <select id="test" parameterType="list">
+        select
+        <include refid="base_Column_list"/>
+        from
+        <include refid="table"/>
+        where
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator="or">
+            id = #{item}
+        </foreach>
+    </select>
+    <select id="selectByIds" resultType="com.mike.bean.User">
+        select * from
+        <include refid="table"/>
+        <where>
+            <foreach collection="list" item="item" index="index" separator="or" open="(" close=")">
+                id=#{item}
+            </foreach>
+        </where>
+    </select>
+</mapper>

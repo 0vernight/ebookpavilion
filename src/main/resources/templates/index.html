@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home Pages</title>
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+        var user =/*[[${session.user}]]*/{}
+
+        // alert(user)
+        function addshelf(id) {
+            var id = "id=" + id;
+            if (confirm("确定添加到我的书架吗？")){
+                axios({
+                    url: '/shelf/add',
+                    method: 'post',
+                    data: id
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        alert(res.data.message);
+                    } else if (res.data.code == 201) {
+                        alert(res.data.message)
+                    } else if (res.data.code == 202) {
+                        alert(res.data.message)
+                        window.location.href = "/toLogin";
+                        // newpage.location.href='/toLogin'
+                    }
+                    // alert(res.data.code);
+                }).catch(err => {
+                    console(err.data);
+                })
+            }
+
+        }
+
+        function download(file,name) {
+            // alert(file+"/book");
+            // file='bookName='+file;
+
+            if (confirm("你确定要下载"+name+"码？")){
+                // prompt("hahah");
+                if (user==null){
+                    if (confirm("你还没登录，登陆后再下载！"))
+                        window.location.href="/toLogin"
+                }else {
+                    window.location.href=file;
+                }
+            }
+
+        }
+
+
+    </script>
+
+</head>
+
+<body class="">
+
+<!-- header section start-->
+<div th:replace="pages/commhead::commnav"></div>
+<!-- header section end-->
+
+
+<!--<div class="pull-right align-self-center">-->
+<!--    <a th:href="@{/goto}">-->
+<!--        <div class="btn-sharing text-center ">-->
+<!--            <span style="margin-top: 20px">分享阁</span>-->
+<!--        </div>-->
+<!--    </a>-->
+<!--</div>-->
+
+<div class="text-center">
+    <img src="images/montain.jpg" class="front-image">
+</div>
+
+<!--    search start-->
+<div class="form-inline ">
+    <form class="forsearchin col-md-offset-3 col-ms-offset-3" action="/toSearchBook" method="post">
+        <input type="text" style="background-color:#ccc;" class="form-control minput" name="keyword"
+               placeholder="Search here..."/>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </form>
+</div>
+<!--    search end-->
+<div class="main-content">
+    <!-- page heading start-->
+    <div class="page-heading">
+        <h3>
+            推荐 <small>默认</small>
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Extra Pages</a>
+            </li>
+            <li class="active">Directory Page</li>
+        </ul>
+    </div>
+    <!-- page heading end-->
+    <div class="wrapper ">
+
+        <div class="directory-info-row">
+            <!--            书籍开始循环显示-->
+            <div class="row" th:each="book,status:${bookList}">
+                <div class="col-md-offset-2 col-md-8 col-sm-8">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h4>[[${book.name}]] <span class="text-muted small"> - [[${book.author}]]</span></h4>
+                            <div class="media">
+                                <a class="pull-left" th:href="@{/toDetail(id=${book.id})}">
+                                    <img class="thumb media-object"
+                                         th:src="${(book.cover)==null?'images/eBook.png':book.cover}" alt="">
+                                </a>
+                                <div class="media-body">
+                                    <a class="" th:href="@{/toDetail(id=${book.id})}">
+                                        <address class="media media-body">
+                                            <strong>分类：</strong>&nbsp;&nbsp; [[${book.type}]]<br>
+                                            <strong>简介：</strong>
+                                            &nbsp;&nbsp;<span th:text="${#strings.abbreviate(book.brief,150)}" th:title="${book.brief}"></span><br>
+                                            <ins title="Phone">出版社:</ins>
+                                            [[${book.press}]]<br>
+                                            <small>发布年份：[[${book.pubyear}]],格式：[[${book.format}]],下载次数：[[${book.downloadTimes}]],字数：[[${book.wordNum}]],版本号：[[${book.edition}]]</small>
+                                            <br>
+                                        </address>
+                                    </a>
+                                    <ul class="social-links">
+                                        <li th:onclick="addshelf([[${book.id}]])"><a title="" data-placement="top"
+                                                                                     data-toggle="tooltip"
+                                                                                     class="tooltips"
+                                                                                     data-original-title="addbook"><i
+                                                class="fa fa-plus">加入书架</i></a>
+                                        </li>
+                                        <li th:onclick="download([[${book.file}]],[[${book.name}]])"><a  title="" data-placement="top"
+                                                                                     data-toggle="tooltip"
+                                                                                     class="tooltips"
+                                                                                     data-original-title="addbook"><i
+                                                class="fa fa-download">下到本地</i></a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+</body>
+</html>

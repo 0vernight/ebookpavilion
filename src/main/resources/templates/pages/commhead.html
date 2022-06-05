@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<!-- header section end-->
+<!-- header section start  class="horizontal-menu-page"-->
+<div th:fragment="commnav" class="horizontal-menu-page header-section">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand " href="/">
+                    <img src="images/mylogo.png" alt="">
+                    <img src="images/logo.png" alt="">
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">首页</a></li>
+                    <li class=""><a href="toShelf">书架</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">分享阁 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/toBook">我的分享</a></li>
+                            <li><a href="/toAddBook">我要分享</a></li>
+                            <li><a href="/toShareList">分享列表</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">论坛 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">我的发布</a></li>
+                            <li><a href="/toComment">我的评论</a></li>
+                            <li><a href="#">other</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">其他 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">制作书籍</a></li>
+                            <li><a href="#">版权</a></li>
+                            <li><a href="#">other</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">帮助<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">使用帮助 </a></li>
+                            <li><a href="#">联系我们 </a></li>
+                            <li><a href="#">关于    </a></li>
+                            <li><a href="#">Form Validation</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav center-block">
+                    <li>
+                        <form action="/toSearchBook" class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="keyword" placeholder="Search">
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+
+<!--                src="images/photos/user-avatar.png"-->
+                <ul class="nav navbar-nav navbar-right notification-menu menu-right">
+                    <li>
+                        <a href="" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <img th:src="${session.user}==null?'images/photos/user-avatar.png':(${session.user.avatar}==null?'images/photos/user-avatar.png':${session.user.avatar})" alt="avatar"/>
+                            <span id="username" th:text="${session.user}==null?'登录':${session.user.username}"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                            <li><a href="/toProfile"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a href="/toSeting"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="/toLogout"><i class="fa fa-sign-out"></i> Log Out</a></li>
+                            <li><a th:href="${session.user}==null?('/toLogin')" href="/toLogin"><i
+                                    class="fa fa-sign-in"></i> Log In</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div><!-- /.navbar-collapse   th:text="${session.user}==null?'Log In':'Log Out'"-->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!--footer section start footer container sticky-footer-->
+    <div class="mfooter">
+        <footer>
+                  2021 &copy; 由麦麦诚恳开发
+        </footer>
+    </div>
+
+</div>
+
+
+</body>
+</html>

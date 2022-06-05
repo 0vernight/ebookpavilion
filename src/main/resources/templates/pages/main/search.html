@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>search</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+        function addshelf(id) {
+            var id="id="+id;
+
+            axios({
+                url:'/shelf/add',
+                method:'post',
+                data:id
+            }).then(res=>{
+                if (res.data.code==200){
+                    alert(res.data.message);
+                }else if (res.data.code==201){
+                    alert(res.data.message)
+                    // alert("注册失败！原因已经存在数据库当中了，请直接登录");
+                }else if (res.data.code==202){
+                    alert(res.data.message)
+                    window.location.href="/toLogin";
+                    // newpage.location.href='/toLogin'
+                }
+                // alert(res.data.code);
+            }).catch(err=>{
+                console(err.data);
+            })
+
+        }
+        function download(file,name) {
+            // alert(file+"/book");
+            // file='bookName='+file;
+
+            if (confirm("你确定要下载"+name+"码？")){
+                // prompt("hahah");
+                if (user==null){
+                    if (confirm("你还没登录，登陆后再下载！"))
+                        window.location.href="/toLogin"
+                }else {
+                    window.location.href=file;
+                }
+            }
+
+        }
+
+
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <!--    search start-->
+    <form class="forsearchin form-inline col-md-offset-1" action="/toSearchBook" method="post">
+        <input type="text" class="form-control minput" th:value="${keyword}" name="keyword"
+               placeholder="Search here..."/>
+        <button type="submit" class="btn btn-primary">查询</button>
+    </form>
+</div>
+<!--    search end-->
+<!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="">
+
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <strong class="col-md-offset-5 " style="font-size: 24px;"
+                th:if="${bookList==null||bookList.size==0}">~~~未找到~~~</strong>
+        <div class="directory-info-row">
+            <!--            书籍开始循环显示-->
+            <div class="row" th:each="book,status:${bookList}">
+                <div class="col-md-offset-1 col-ms-offset-1 col-md-10 col-sm-10">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h4>[[${status.count}]].[[${book.name}]] <span class="text-muted small"> - [[${book.author}]]</span>
+                            </h4>
+                            <div class="media">
+                                <a class="pull-left" href="#">
+                                    <img class="thumb media-object"
+                                         th:src="${(book.cover)==null?'images/eBook.png':book.cover}" alt="">
+                                </a>
+                                <div class="media-body">
+                                    <address>
+                                        [[${book.type}]]类<br>
+                                        <strong>简介：</strong>
+                                        &nbsp;&nbsp;[[${book.brief}]]<br>
+                                        <ins title="Phone">出版社:</ins>
+                                        [[${book.press}]]<br>
+                                        <small>发布年份：[[${book.pubyear}]],格式：[[${book.format}]],下载次数：[[${book.downloadTimes}]],字数：[[${book.wordNum}]],版本号：[[${book.edition}]]</small>
+                                        <br>
+                                    </address>
+                                    <ul class="social-links">
+                                        <li th:onclick="addshelf([[${book.id}]])"><a  title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                               data-original-title="addbook"><i class="fa fa-plus">加入书架</i></a>
+                                        </li>
+                                        <li th:onclick="download([[${book.file}]],[[${book.name}]])"><a  title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                               data-original-title="download"><i class="fa fa-download">下到本地</i></a>
+                                        </li>
+                                        <li><a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                                data-original-title="Twitter"><i class="fa fa-star">收藏书籍</i></a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--body wrapper end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+
+
+    </div>
+    <!--body wrapper end-->
+
+</div>
+<!-- main content end-->
+
+<!--common scripts for all pages-->
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+
+<!--Sparkline Chart-->
+<script src="js/sparkline/jquery.sparkline.js"></script>
+<script src="js/sparkline/sparkline-init.js"></script>
+
+
+</body>
+</html>

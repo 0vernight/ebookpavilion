@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Registration</title>
+
+    <link th:include="pages/commimp::head">
+
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            //事件
+        });
+        function fun(){
+            var formdata=new FormData($( "#signupForm")[0] );
+            // var o = $('form').serialize();
+            // alert("出现了="+$("#password").val()+"=");
+            if ($("#username").val().length<2){
+                alert("名字不能小于两个字符");
+            }else if ($("#password").val()==''){
+                alert("密码不能为空！");
+            } else if ($("#confirm").val()!=$("#password").val()){
+                alert("两次密码不一致");
+            } else {
+                axios({
+                    url:'/register',
+                    method:'post',
+                    data:formdata
+                }).then(res=>{
+                    if (res.data.code==200){
+                        alert(res.data.message);
+                        // var email=res.data.data.getEmail();
+                        window.location.href="/toLogin?email="+res.data.data.email;
+                    }else if (res.data.code==201){
+                        alert(res.data.message)
+                        // alert("注册失败！原因已经存在数据库当中了，请直接登录");
+                    }else if (res.data.code==202){
+                        alert(res.data.message)
+                    }
+                    // alert(res.data.code);
+                }).catch(err=>{
+                    console(err.data);
+                })
+            }
+            
+        }
+
+        function birth(date){
+            // alert(date)
+            var age=date.replace(/\-/g, "/");
+            var d1=new Date(age);
+            var d2=new Date();
+
+            // alert(parseInt(d2 - d1) / 1000 / 3600 / 24 / 365);
+            $("#age").val(parseInt((d2 - d1) / 1000 / 3600 / 24 / 365));
+
+        }
+    </script>
+</head>
+
+<body class="login-body">
+
+<div class="container">
+
+<!--    -->
+    <form id="signupForm" class="form-signin" >
+        <div class="form-signin-heading text-center">
+            <h1 class="sign-title">新用户注册</h1>
+            <img src="images/book.png" alt="logo"/>
+        </div>
+
+
+        <div class="login-wrap">
+            <p>[[${msg}]]</p>
+            <p>输入您的个人信息</p>
+            <input type="text" id="username" name="username" autofocus="" placeholder="实名" class="form-control">
+            <input type="text" id="email" name="email" autofocus="" placeholder="邮箱" class="form-control">
+            <input type="password" id="password" name="password" placeholder="密码大于4" class="form-control">
+            <input type="password" id="confirm" name="repassword" placeholder="确认密码" class="form-control">
+
+            <div class="radios">
+                <label for="radio-01" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" checked="" value="男" id="radio-01" name="sex"> 男
+                </label>
+                <label for="radio-02" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" value="女" id="radio-02" name="sex"> 女
+                </label>
+                <label for="radio-02" class="label_radio col-lg-4 col-sm-4">
+                    <input type="radio" value="保密" id="radio-03" name="sex"> 保密
+                </label>
+            </div>
+            <p>输入您的帐户详细信息如下:生日</p>
+            <input type="date" name="birthDay" onblur="birth(this.value)" placeholder="生日" class="form-control">
+            <input type="text" name="phone" placeholder="电话" class="form-control">
+            <input type="text" name="age" id="age"  placeholder="年龄" class="form-control">
+            <input type="text" name="address" placeholder="地址" class="form-control">
+
+
+            <label class="checkbox">
+                <input type="checkbox" value="agree this condition"> 我同意服务条款和隐私政策
+            </label>
+            <button type="button" onclick="fun()" id="submit" class="btn btn-lg btn-login btn-block">
+                <i class="fa fa-check"></i>
+            </button>
+
+            <div class="registration">
+                已经注册。
+                <a href="/toLogin" class="">
+                    去登陆
+                </a>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>book</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+
+        function fun(){
+            var formdata=new FormData($( "#addbookform")[0] );
+            // alert("出现了="+$("#password").val()+"=");
+            axios({
+                url:'/addBook',
+                method:'post',
+                data:formdata
+            }).then(res=>{
+                if (res.data.code==200){
+                    alert(res.data.message)
+                    window.location.href="/toBook";
+                }else if (res.data.code==201){
+                    alert(res.data.message)
+                    // alert("注册失败！原因已经存在数据库当中了，请直接登录");
+                }else if (res.data.code==202){
+                    alert(res.data.message)
+                }
+                // alert(res.data.code);
+            }).catch(err=>{
+                console(err.data);
+            })
+            // if ($("#username").val().length<2){
+            //     alert("名字不能小于两个字符");
+            // }else if ($("#password").val()==''){
+            //     alert("密码不能为空！");
+            // } else if ($("#confirm").val()!=$("#password").val()){
+            //     alert("两次密码不一致");
+            // } else {
+            //
+            // }
+
+        }
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <div th:replace="pages/commhead::commnav"></div>
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="main-content">
+
+    <!-- header section start -->
+    <div class="page-heading">
+        <h3>书籍</h3>
+        <ul class="nav nav-pills p-option col-md-offset-4">
+            <li>
+                <a href="/toBook"><i class="fa  fa-book">我的分享</i></a>
+            </li>
+            <li class="active">
+                <a href="/toAddBook"><i class="fa fa-upload">我要分享</i></a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-"></i></a>
+            </li>
+            <!--        <li>-->
+            <!--            <a href="#"><i class="fa fa-meh-o"></i></a>-->
+            <!--        </li>-->
+        </ul>
+    </div>
+
+
+    <div class="row center-block">
+        <div class="col-md-offset-2 col-md-8">
+            <section class="panel">
+                <header class="panel-heading">
+                    上传书籍
+                </header>
+                <div class="panel-body">
+                    <form id="addbookform" role="form">
+                        <div class="form-group">
+                            <label for="type">类型</label>
+                            <input type="text" name="type" class="form-control" id="type" placeholder="输入书的类型">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">书名</label>
+                            <input type="text" name="name" class="form-control" id="name" placeholder="输入书的名字">
+                        </div>
+                        <div class="form-group">
+                            <label for="author">作者</label>
+                            <input type="text" name="author" class="form-control" id="author" placeholder="输入作者名">
+                        </div>
+                        <div class="form-group">
+                            <label for="press">出版社</label>
+                            <input type="text" name="press" class="form-control" id="press" placeholder="输入出版社">
+                        </div>
+                        <div class="form-group">
+                            <label for="pubyear">出版年份</label>
+                            <input type="date" name="pubyear" class="form-control" id="pubyear" placeholder="输入出版年份">
+                        </div>
+                        <div class="form-group">
+                            <label for="wordNum">总字数</label>
+                            <input type="number" name="wordNum" class="form-control" id="wordNum" placeholder="输入总字数">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brief" class="control-label">简介 </label>
+                            <textarea rows="6" name="brief" class="col-sm-10 form-control" id="brief"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">书的封面</label>
+                            <input type="file" name="coverfile" class="default form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputFile">选择书籍</label>
+                            <input type="file" name="bookfile" id="exampleInputFile">
+                            <p class="help-block">Example block-level help text here.</p>
+                        </div>
+
+                        <div class="text-center form-group">
+                            <button type="button" onclick="fun()" class="btn btn-primary ">提交</button>
+                            <button type="reset" class="btn btn-primary ">重置</button>
+                        </div>
+                        <div class="checkbox">
+                            <label class="text-center">
+                                <input type="checkbox"> 同意协议
+                            </label>
+                        </div>
+                    </form>
+
+                </div>
+            </section>
+        </div>
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+
+        </div>
+        <!--body wrapper end-->
+
+    </div>
+    <!-- main content end-->
+
+    <!--common scripts for all pages-->
+    <div th:insert="pages/commimp::scrallpages"></div>
+
+
+</body>
+</html>

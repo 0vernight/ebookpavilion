@@ -1,0 +1,112 @@
+/*
+* 	Owl, eagle mike it's not easy but it's good
+*	v1.0.1
+*/
+
+
+/*----------------------------
+        body
+-----------------------------*/
+.aprofile-body {
+    background: #65cea7 url("../images/montain.jpg") no-repeat fixed;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+
+/*----------------------------
+        labal
+-----------------------------*/
+.full-width{
+    width: 100%;
+
+}
+
+
+/*----------------------------
+        serch input
+-----------------------------*/
+
+.forsearchin{
+    /*margin: auto;*/
+    width: 50%;
+    font-size: 14px;
+    height: 50px;
+    padding: 10px;
+
+}
+.forsearchin .minput{
+    width: 80%;
+    height: 50px;
+    position: relative;
+}
+
+.forsearchin button{
+    width: 80px;
+    height: 50px;
+}
+
+
+
+/*----------------------------
+        image
+-----------------------------*/
+.profile-bgpic{
+    width: 100%;
+    height: 250px;
+
+}
+
+.front-image{
+    width: 150px;
+    height: 150px;
+    margin-top: 160px;
+    margin-bottom: 20px;
+    text-align: center;
+    align-content: center;
+    border-radius: 20px;
+}
+.recommendsimg{
+    width: 80px;
+    height: 80px;
+
+}
+/*----------------------------
+        floatbutton
+-----------------------------*/
+
+.btn-sharing {
+    width: 80px;
+    height: 80px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #cb60b3; /* 旧版浏览器 */
+    background: -moz-linear-gradient(top,  #cb60b3 0%, #ad1283 50%, #de47ac 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cb60b3), color-stop(50%,#ad1283), color-stop(100%,#de47ac)); /   *   Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #cb60b3 0%,#ad1283 50%,#de47ac 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #cb60b3 0%,#ad1283 50%,#de47ac 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #cb60b3 0%,#ad1283 50%,#de47ac 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #cb60b3 0%,#ad1283 50%,#de47ac 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cb60b3', endColorstr='#de47ac',GradientType=0 ); /* IE6-9 */
+    color:#fff;
+    float: right;
+    display: flow;
+    margin-top: 100%;
+}
+
+
+
+/*----------------------------
+        footer
+-----------------------------*/
+.mfooter {
+    position: fixed;
+    left: 20px;
+    bottom: 0px;
+    width: 100%;
+    height: 50px;
+    background-color:#ccc;
+    z-index: 99;
+}

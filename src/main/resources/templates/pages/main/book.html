@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>book</title>
+
+    <link th:include="pages/commimp::head">
+    <script type="text/javascript" th:inline="javascript">
+
+        function rmbook(id) {
+            var id = "id=" + id;
+
+            axios({
+                url: '/removeBook',
+                method: 'post',
+                data: id
+            }).then(res => {
+                if (res.data.code == 200) {
+                    alert(res.data.message);
+                    window.location.href = "toBook";
+                } else if (res.data.code == 201) {
+                    alert(res.data.message)
+                } else if (res.data.code == 202) {
+                    alert(res.data.message)
+                    window.location.href = "/toLogin";
+                    // newpage.location.href='/toLogin'
+                }
+                // alert(res.data.code);
+            }).catch(err => {
+                console(err.data);
+            })
+
+        }
+
+        function download(id) {
+            alert(id);
+        }
+    </script>
+</head>
+
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <div th:replace="pages/commhead::commnav"></div>
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="main-content">
+
+    <!-- header section start -->
+    <div class="page-heading col-md-offset-1">
+        <h3>书籍</h3>
+        <ul class="nav nav-pills p-option col-md-offset-4">
+            <li class="active">
+                <a href="/toBook"><i class="fa  fa-book">我的分享</i></a>
+            </li>
+            <li>
+                <a href="/toAddBook"><i class="fa fa-upload">我要分享</i></a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-"></i></a>
+            </li>
+            <!--        <li>-->
+            <!--            <a href="#"><i class="fa fa-meh-o"></i></a>-->
+            <!--        </li>-->
+        </ul>
+    </div>
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <ul class="directory-list">
+            <li><a href="#">a</a></li>
+            <li><a href="#">b</a></li>
+            <li><a href="#">c</a></li>
+            <li><a href="#">d</a></li>
+            <li><a href="#">e</a></li>
+            <li><a href="#">f</a></li>
+            <li><a href="#">g</a></li>
+            <li><a href="#">h</a></li>
+            <li><a href="#">i</a></li>
+            <li><a href="#">j</a></li>
+            <li><a href="#">k</a></li>
+            <li><a href="#">l</a></li>
+            <li><a href="#">m</a></li>
+            <li><a href="#">n</a></li>
+            <li><a href="#">o</a></li>
+            <li><a href="#">p</a></li>
+            <li><a href="#">q</a></li>
+            <li><a href="#">r</a></li>
+            <li><a href="#">s</a></li>
+            <li><a href="#">t</a></li>
+            <li><a href="#">u</a></li>
+            <li><a href="#">v</a></li>
+            <li><a href="#">w</a></li>
+            <li><a href="#">x</a></li>
+            <li><a href="#">y</a></li>
+            <li><a href="#">z</a></li>
+        </ul>
+        <strong class="col-md-offset-5 " style="font-size: 24px;" th:if="${bookList==null||bookList.size==0}">~~~你还未分享哦~~~</strong>
+        <div class="directory-info-row">
+            <!--            书籍开始循环显示-->
+            <div class="row" th:each="book,status:${bookList}">
+                <div class="col-md-12 col-sm-12">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h4>[[${book.name}]] <span class="text-muted small"> - [[${book.author}]]</span></h4>
+                            <div class="media">
+                                <a class="pull-left" th:href="@{/toDetail(id=${book.id})}">
+                                    <img class="thumb media-object"
+                                         th:src="${(book.cover)==null?'images/eBook.png':book.cover}" alt="">
+                                </a>
+                                <div class="media-body">
+                                    <a class="" th:href="@{/toDetail(id=${book.id})}">
+                                        <address class="full-width">
+                                            <strong>分类：</strong>&nbsp;&nbsp; [[${book.type}]]<br>
+                                            <strong>简介：</strong>
+                                            &nbsp;&nbsp;<span th:text="${#strings.abbreviate(book.brief,150)}"
+                                                              th:title="${book.brief}"></span><br>
+                                            <ins title="Phone">出版社:</ins>
+                                            [[${book.press}]]<br>
+                                            <small>发布年份：[[${book.pubyear}]],格式：[[${book.format}]],下载次数：[[${book.downloadTimes}]],字数：[[${book.wordNum}]],版本号：[[${book.edition}]]</small>
+                                            <br>
+                                        </address>
+                                    </a>
+                                    <ul class="social-links">
+                                        <li th:onclick="rmbook([[${book.id}]])"><a title="" data-placement="top"
+                                                                                   data-toggle="tooltip"
+                                                                                   class="tooltips"
+                                                                                   data-original-title=""><i
+                                                class="fa fa-minus">删除</i></a>
+                                        </li>
+                                        <li><a title="" data-placement="top"
+                                               data-toggle="tooltip"
+                                               class="tooltips"
+                                               th:href="@{/toEditBook(id=${book.id})}" data-original-title="edit"><i
+                                                class="fa fa-edit">修改</i></a>
+                                        </li>
+                                        <li><a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                               href="" data-original-title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                                        </li>
+                                        <li><a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                               href="" data-original-title="Skype"><i class="fa fa-skype"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--body wrapper end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+
+
+    </div>
+    <!--body wrapper end-->
+
+</div>
+<!-- main content end-->
+
+<!--common scripts for all pages-->
+<!--common all pages-->
+<div th:insert="pages/commimp::scrallpages"></div>
+
+
+<!--Sparkline Chart-->
+<script src="js/sparkline/jquery.sparkline.js"></script>
+<script src="js/sparkline/sparkline-init.js"></script>
+
+
+</body>
+</html>
