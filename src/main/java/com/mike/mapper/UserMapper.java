@@ -26,7 +26,7 @@ public interface UserMapper {
     @Select("Select * from user where username = #{username}")
     User selectByUsername(@Param("username") String username);
 
-    @Insert("insert into user (id, username,nickname, password, email, phone, age, sex, creation_date, birth_day, address) values(#{id}, #{username},#{nickname}, #{password}, #{email}, #{phone}, #{age}, #{sex}, #{creationDate}, #{birthDay}, #{address})")
+    @Insert("insert into user (id, username,nickname, password, email, phone, age, sex, creation_date, birthday, address) values(#{id}, #{username},#{nickname}, #{password}, #{email}, #{phone}, #{age}, #{sex}, #{creationDate}, #{birthDay}, #{address})")
     Long register(User user);
 
     @Select("Select * from user where id = #{id}")

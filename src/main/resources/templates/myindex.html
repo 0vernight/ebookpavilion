@@ -5,31 +5,120 @@
     <title>Ebookpavilion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--    <link th:include="pages/commimp::commonhead">-->
+    <link th:include="pages/commimp::commonhead">
 
 <!--    记得写上type属性-->
-    <script  th:type="txt/script" src="../static/js/meta-common1.0.0/practice01.js">
+<!--    <script  th:type="txt/script" src="../static/js/meta-common1.0.0/practice01.js">-->
 
-        alert("hello js1!");
+<!--        alert("hello js1!");-->
+<!--    </script>-->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.4.0.js"></script>
+    <script th:type="txt/script" th:src="/practice01.js">
+
+        var i;
+
+        i=10;
+        //alert("hello javascript1!"+(++i));
+        var obj={};
+        // alert("sum="+sum(10,20)+typeof(obj));
+
+        //必须调用才能起作用
+        // fun();
+        //onload事件的动态注册，固定写法
+
+
+        // alert(11233);
+        // alert($);
+
+
+
+        // //动态注册必须在window.onload里定义
+        // window.onload=function (){
+        //     // alert("动态注册函数");
+        //     //document 表示当前页面
+        //     let bt1 = document.getElementById("btn1");
+        //     bt1.onclick=function () {
+        //         alert("onclick函数里的事件");
+        //         console.log("用于测试使用");
+        //     }
+        //
+        // }
+        //onblur
+        //对象方法
+        //
+        var patt=/^\w{5,12}$/;
+
+        ////window.onload=function () {一个页面只有一个
+        window.onload=function () {
+            var bt1 =document.getElementById("test1");
+            bt1.onclick=function (event) {
+
+               let un = document.getElementById("username");
+               let value = un.value;
+               let tagName = un.tagName;
+                console.log(event);
+                alert(value+tagName);
+                alert(un+"   "+patt.test(value));
+            }
+
+            document.getElementById("create").onclick=function(){
+                var divObj=document.createElement("div");
+                divObj.innerHTML="欢迎继续进步和成长";
+
+                document.body.appendChild(divObj);
+
+            }
+        }
+
+        //jQuery函数相当于js 的window.onload=function(){}
+        $(function () {
+            alert($)
+            // document.getElementById("jquery").onclick=function(){
+            //     alert("jquery nice");
+            // }
+            var $bb=$("#jquery");       //#表示id
+            $bb.click(function(){
+                alert("jq onclick");
+
+                $("<div><span>快了的生活才是真！</span></div>").appendTo("body");
+            });
+
+        })
+
+
+
+        function sum(a,b) {
+            return a+b;
+        }
+        function fun() {
+            alert("函数必须调用了才能其作用")
+        }
+        function onloadfun(){
+            alert("静态注册函数");
+        }
     </script>
 
-    <script th:type="txt/script" th:src="../practice01.js">
 
-        alert("hello javascript1!");
-    </script>
 </head>
-<body>
+//onload事件是浏览器解析页面之后自动触发的函数而且是最后
+<!--<body onload="onloadfun()">-->
+<body >
     <h1>mike,欢迎你！</h1>
 
     <form action="/login" enctype="multipart/form-data" method="get">
-        姓名:<input name="username" value="mike"/><br/>
+        姓名:<input name="username" value="mike" id="username"/><br/>
         密码:<input name="psw" value="123456"/><br/>
         年龄:<input name="age" value="23"/><br/>
         邮箱:<input name="mail" value="232343"/><br/>
 
-        <input type="submit">提交
+        <input type="submit" >提交
     </form>
     <div class="container-fluid bottom-right">右下角</div>
+
+    <button type="button"  id="test1" class="test1">测试</button>
+    <button type="button"  id="create" class="cratebtn">创建测试</button>
+    <button type="button"  id="jquery" class="">JQuery测试</button>
 
     <div class="modal fade" id="modal_signout" tabindex="-1" role="dialog">
         <div class="modal-dialog" style="max-width:350px;margin: auto;" role="document">
@@ -38,14 +127,10 @@
                     <h4>您好！ overnight</h4>
                     <p style="color: #ff473a">确认要退出当前登录吗？</p>
                 </div>
-                <div class="box-body text-right">
-                    <button type="button" class="but mr10" data-dismiss="modal">取消</button>
-                    <a type="button" class="but c-red"
-                       href="https://jrjpc.com/wp-login.php?action=logout&amp;redirect_to=https%3A%2F%2Fjrjpc.com&amp;_wpnonce=00882298d0">确认退出</a>
-                </div>
+
             </div>
         </div>
     </div>
-    <div th:replace="pages/commimp::commonsrc"></div>
 </body>
 </html>
+    

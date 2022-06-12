@@ -83,7 +83,7 @@ public class BookServiceImpl implements BookService {
     public BaseResponse<Book> addBook(User user, Book book, MultipartFile coverFile, MultipartFile bookFile) {
         BaseResponse<Book> response = new BaseResponse<>();
         book.setId(UUIDUtils.getUUID32());
-        book.setUpDate(new Date());
+        book.setUploadDate(new Date());
         book.setUploaderId(user.getId());
         if (book.getName().isEmpty()|| book.getType().isEmpty()||book.getAuthor().isEmpty()||book.getBrief().isEmpty()||book.getPubyear().isEmpty()||book.getPress().isEmpty()){
             response.setError("上传书籍时所有的字段不能为空", book);

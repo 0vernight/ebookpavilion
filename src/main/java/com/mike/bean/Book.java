@@ -37,11 +37,11 @@ public class Book {
     private String file;
     private String cover;
     private String downloadTimes;
-    private String price;
-    private String pageNum;
-    private String wordNum;
+    private int price;
+    private int pageNum;
+    private int wordNum;
     private String edition;
     private String uploaderId;
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date upDate;
+    private Date uploadDate;
 }

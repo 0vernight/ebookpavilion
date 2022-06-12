@@ -17,7 +17,7 @@ import java.util.List;
 
 @Mapper
 public interface ShelfMapper {
-    @Select("select * from ebp.book where id in(select book_id from ebp.shelf where user_id=#{userId})")
+    @Select("select * from book where id in(select book_id from shelf where user_id=#{userId})")
     List<Book> selectByuid(Shelf shelf);
 
     @Insert("insert into shelf (id,user_id,book_id,add_time) values(#{id},#{userId},#{bookId},#{addTime})")
