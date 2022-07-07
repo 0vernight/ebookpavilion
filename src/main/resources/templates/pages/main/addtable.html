@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Ebookpavilion</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link th:include="pages/commimp::commonhead">
+    <title>table</title>
 
-<!--    记得写上type属性-->
-<!--    <script  th:type="txt/script" src="../static/js/meta-common1.0.0/practice01.js">-->
-
-<!--        alert("hello js1!");-->
-<!--    </script>-->
+    <link th:include="pages/commimp::head">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/jquery-migrate-3.4.0.js"></script>
-    <script th:type="txt/script" th:src="/practice01.js">
+    <script type="text/javascript" th:inline="javascript">
 
         $(function () {
 
@@ -32,7 +25,7 @@
                     alert("cancel");
                 }
                 return false;
-            }
+            };
             $("#jquery").click(function () {
 
                 //通过id和name获取值
@@ -102,54 +95,120 @@
                         top:event.pageY+30
                     });
                 }
-            })
+            });
+            // jquery 页面跳转
+            // $(location).attr('href',"http://www.baidu.com");
+            // 使用JavaScript实现跳转
+            // window.location.href = "http://stackoverflow.com";
+            $("#userbyname").click(function () {
+                // alert("user search!");
+                $(location).attr('href',"http://localhost:8080/userbyname?username=mike");
+            });
+
+            $("#submitbtn1").click(function () {
+                // alert("formdata before");
+                var formdata = new FormData($("#fileForm")[0]);
+                // // formarr=$("#fileForm").serializeArray();
+                // // var formdata = $("#fileForm")[0];
+
+                // alert("fomatdata after="+formdata.get("username"));
+                // alert("fomatdata file="+formdata.get("file"));
+                // alert("file"+$("#file").file[0]);
+
+                if (formdata.get("username")!=null){
+                    // alert("异步请求开始了");
+                    axios({
+                        url: '/userbyname',
+                        method: 'post',
+                        data: formdata
+                    }).then(res => {
+                        // alert("return res="+res);
+                        // alert("return data="+res.data);
+                        if (res.data.code == 200) {
+                            alert(res.data.message)
+                            window.location.href = "/toBook";
+                        } else if (res.data.code == 201) {
+                            alert(res.data.message)
+                            // alert("注册失败！原因已经存在数据库当中了，请直接登录");
+                        } else if (res.data.code == 202) {
+                            alert(res.data.message)
+                        }
+                        // alert(res.data.code);
+                    }).catch(err => {
+                        console(err.data);
+                    });
+
+                }
+
+
+            });
+            
+            $("#attri").click(function () {
+
+                alert("request=");
+
+            });
+
         });
+
 
 
     </script>
 
-    <style>
-        table{
-            border-collapse: collapse; /* Remove cell spacing */
-        }
-        table, th, td{
-            border: 1px solid #666;
-        }
-        table th, table td {
-            padding: 10px; /* Apply cell padding */
-        }
-        #smallDiv{
-            /*align-items: center;*/
-            /*align-self: center;*/
-            /*align-content: center;*/
-            text-align: center;
-        }
-        /*tr{*/
-        /*    border: 1px solid;*/
-        /*}*/
-        /*td{*/
-        /*    border: 1px solid;*/
-        /*}*/
-    </style>
+<!--    <style>-->
+<!--        table{-->
+<!--            border-collapse: collapse; /* Remove cell spacing */-->
+<!--        }-->
+<!--        table, th, td{-->
+<!--            border: 1px solid #666;-->
+<!--        }-->
+<!--        table th, table td {-->
+<!--            padding: 10px; /* Apply cell padding */-->
+<!--        }-->
+<!--        #smallDiv{-->
+<!--            /*align-items: center;*/-->
+<!--            /*align-self: center;*/-->
+<!--            /*align-content: center;*/-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        /*tr{*/-->
+<!--        /*    border: 1px solid;*/-->
+<!--        /*}*/-->
+<!--        /*td{*/-->
+<!--        /*    border: 1px solid;*/-->
+<!--        /*}*/-->
+<!--    </style>-->
 
 </head>
-//onload事件是浏览器解析页面之后自动触发的函数而且是最后
-<!--<body onload="onloadfun()">-->
-<body >
-    <h1>mike,欢迎你！</h1>
 
-    <form action="/login" enctype="multipart/form-data" method="get">
+<body class="">
+<div class="header-section">
+    <!-- header section start-->
+    <div th:replace="pages/commhead::commnav"></div>
+    <!-- header section end-->
+</div>
+
+<!-- main content start-->
+<div class="main-content">
+
+
+<!--    action="/userbyname"-->
+<!--    enctype="multipart/form-data"-->
+    <form  action="/userbyname" enctype="multipart/form-data" method="post" id="fileForm">
+        <input type="hidden" name="action" value="upload">
         姓名:<input name="username" value="mike" id="username"/><br/>
         密码:<input name="psw" value="123456"/><br/>
         年龄:<input name="age" value="23"/><br/>
         邮箱:<input name="mail" value="232343"/><br/>
 
-        <input type="submit" >提交
+        文件：<input type="file" name="file" id="file">
+        <input type="submit" id="submitbtn">提交
     </form>
     <div class="container-fluid bottom-right">右下角</div>
     <button type="button"  id="test1" class="test1">测试</button>
-    <button type="button"  id="create" class="cratebtn">创建测试</button>
-    <button type="button"  id="jquery" class="">JQuery测试</button>
+    <button type="button"  id="attri" class="attri">属性测试</button>
+    <button type="button"  id="jquery" class="">addtable测试</button>
+    <button type="button"  id="userbyname" class="">跳转user</button>
 
     <table id="emptb" style="align-items: center;text-align:center;width: 300px;border:1px solid;">
         <tr>
@@ -180,25 +239,31 @@
         </tr>
     </table>
 
-    <div id="smallDiv">
-        <img   id="small" src="../static/images/19shuxie3x.png"  style="align-self:center;">
+    <div id="smallDiv"  class="center-block" th:align="center">
+        <img id="small" src="images/19shuxie3x.png" style="align-self:center;">
     </div>
     <div id="showBig" style="width: 200px; height: 200px;">
 
-        <img src="../static/images/montain.jpg" style="align-self:center; width: 600px; height:370px;">
+        <img src="images/montain.jpg" style="align-self:center; width: 600px; height:370px;">
     </div>
 
-    <div class="modal fade" id="modal_signout" tabindex="-1" role="dialog">
-        <div class="modal-dialog" style="max-width:350px;margin: auto;" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h4>您好！ overnight</h4>
-                    <p style="color: #ff473a">确认要退出当前登录吗？</p>
-                </div>
 
-            </div>
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+
         </div>
+        <!--body wrapper end-->
+
     </div>
+    <!-- main content end-->
+
+    <!--common scripts for all pages-->
+    <div th:insert="pages/commimp::scrallpages"></div>
+
+
 </body>
 </html>
-    
+
+

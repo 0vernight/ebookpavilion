@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +50,12 @@ public class WebController {
     @Autowired
     CommentService commentService;
 
+    //@ResponseBody
     @RequestMapping("/test1")
-    public void test1(Book book, HttpServletRequest request, Model model, String id) {
-        System.out.println(book + id);
+    public String test1(HttpServletRequest request, HttpServletResponse response, Model model) {
+        System.out.println("进入了测试servlet,返回addtable页面");
 
-//        return "pages/main/test1";
+        return "pages/main/addtable";
     }
 
     @RequestMapping({"/"})

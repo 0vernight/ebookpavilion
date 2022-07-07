@@ -1,5 +1,6 @@
 package com.mike.utils;
 
+import com.mike.bean.Book;
 import com.mike.bean.User;
 
 /**
@@ -9,11 +10,18 @@ import com.mike.bean.User;
  */
 
 
-public class JudgeFormat {
+public class JudgeFormat<T> {
+    T type;
     User user;
-
+    Book book;
+    public JudgeFormat(T type) {
+        this.type= type;
+    }
     public JudgeFormat(User user) {
         this.user = user;
+    }
+    public JudgeFormat(Book book) {
+        this.book = book;
     }
 
     public boolean judegeUser(){

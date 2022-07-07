@@ -10,6 +10,12 @@
         function fun(){
             var formdata=new FormData($( "#addbookform")[0] );
             // alert("出现了="+$("#password").val()+"=");
+            var file=$("#exampleInputFile").val().trim();
+            if (file==""){
+                alert("书记没有选择，请先选择！");
+                return -1;
+            }
+
             axios({
                 url:'/addBook',
                 method:'post',
@@ -39,6 +45,15 @@
             // }
 
         }
+
+        $(function () {
+            $("#submitbtn").onclick(function () {
+
+            });
+        });
+
+
+
     </script>
 </head>
 
@@ -79,7 +94,10 @@
                     上传书籍
                 </header>
                 <div class="panel-body">
-                    <form id="addbookform" role="form">
+<!--                    1.form标签的method方法必须为post-->
+<!--                    2.form标签的enctype属性值为multipart/fom-data-->
+<!--                    3.form中的input type=file添加上传的文件-->
+                    <form id="addbookform" role="form" method="post" enctype="multipart/form-data" >
                         <div class="form-group">
                             <label for="type">类型</label>
                             <input type="text" name="type" class="form-control" id="type" placeholder="输入书的类型">
@@ -122,7 +140,7 @@
                         </div>
 
                         <div class="text-center form-group">
-                            <button type="button" onclick="fun()" class="btn btn-primary ">提交</button>
+                            <button type="button" id="submitbtn" onclick="fun()" class="btn btn-primary ">提交</button>
                             <button type="reset" class="btn btn-primary ">重置</button>
                         </div>
                         <div class="checkbox">

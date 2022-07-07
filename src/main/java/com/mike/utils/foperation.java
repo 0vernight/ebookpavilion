@@ -19,8 +19,8 @@ import java.util.List;
 
 
 public class foperation {
-    public static  final String BOOK_PATH="F:\\upload\\book\\";
-    public static  final String IMG_PATH="F:\\upload\\img\\";
+    public static  final String BOOK_PATH="D:\\Program Files\\JetBrains\\ebookpavilion\\upload\\book\\";
+    public static  final String IMG_PATH="D:\\Program Files\\JetBrains\\ebookpavilion\\upload\\img\\";
 
     public static String uploadImg(MultipartFile multipartFile){
         List<String> imageType = new ArrayList<String>(Arrays.asList(".jpg",".jpeg", ".png", ".bmp", ".gif"));

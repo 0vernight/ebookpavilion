@@ -45,4 +45,10 @@ public interface UserMapper {
     int deleteById(User user);
 
     List<User> selectByIds(List<String> ids);
+
+    @Select("select *  from user where username=#{username}")
+    User selectByname(User user);
+
+    @Select("select *  from user where email=#{email}")
+    User searchByEmail(User user);
 }

@@ -14,7 +14,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: 23236
@@ -56,7 +59,58 @@ public class UserController {
     @RequestMapping("/register")
     public BaseResponse<User> register(User user,String repassword, HttpServletRequest request,Model model) {
 //        System.out.println(user+"repassword"+repassword);
+//        遍历：keySet() / values() / entrySet()
+//        Map<String, String[]> parameterMap = request.getParameterMap();
+////        System.out.println(parameterMap);
+//        System.out.println("**********************");
+
+//        Set setEntry=parameterMap.entrySet();
+//        Iterator iterator = setEntry.iterator();
+//        while (iterator.hasNext()){
+//            Map.Entry me=(Map.Entry)iterator.next();
+//            System.out.println("in the it="+me.getKey() + me.getValue());
+//        }
+
         BaseResponse<User> response=userService.register(user);
+        return response;
+    }
+    @RequestMapping("/serchByName")
+    public BaseResponse<User> searchName(User user,@RequestParam(value = "username",required = true)String username, HttpServletRequest request,Model model) {
+        System.out.println(request.getSession().getAttributeNames());
+//        System.out.println(model.getAttribute("userName"));
+//        System.out.println("username="+username);
+//        System.out.println(user);
+        user.setUsername(username);
+        BaseResponse<User> response=userService.searchByName(user);
+
+
+        System.out.println(model);
+        Map<String, String[]> parameterMap = request.getParameterMap();
+//        System.out.println(parameterMap);
+
+        Set setEntry=parameterMap.entrySet();
+        Iterator iterator = setEntry.iterator();
+        while (iterator.hasNext()){
+            Map.Entry me=(Map.Entry)iterator.next();
+            System.out.println("in the it="+me.getKey() +"--->"+me.getValue());
+        }
+        Map<String, Object> mapModel = model.asMap();
+        for (Map.Entry<String, Object> entry : mapModel.entrySet()) {
+            System.out.println("model="+entry.getKey()+" value="+ entry.getValue());
+
+        }
+
+
+        return response;
+    }
+    @RequestMapping("/searchByEmail")
+    public BaseResponse<User> searchByEmail(User user,@RequestParam(value = "email",required = true)String email, HttpServletRequest request,Model model) {
+        System.out.println(request.getSession());
+//        System.out.println(model.getAttribute("email"));
+        System.out.println("email="+email);
+//        System.out.println(user);
+        user.setEmail(email);
+        BaseResponse<User> response=userService.searchByEmail(user);
         return response;
     }
 //    直接跳转的时候完成了webcontroller，所以这个控制器没用

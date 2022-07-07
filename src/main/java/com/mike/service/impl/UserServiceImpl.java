@@ -25,6 +25,7 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
+    //真正操作数据库的接口相当于jdbc 的userDaoImpl类一样的功能
     @Autowired
     UserMapper userMapper;
 
@@ -101,6 +102,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+
     @Override
     public BaseResponse<User> alterProfile(User user) {
         BaseResponse<User> response=new BaseResponse<>();
@@ -138,6 +140,32 @@ public class UserServiceImpl implements UserService {
     public List<User> selectByIds(List<String> ids) {
         List<User> users= userMapper.selectByIds(ids);
         return users;
+    }
+
+    @Override
+    public BaseResponse<User> searchByName(User user) {
+        BaseResponse<User> response=new BaseResponse<>();
+
+//        System.out.println(userMapper.selectByname(user));
+        if (userMapper.selectByname(user) == null) {
+            response.setError("查无此人");
+        }else {
+            response.setOkDaTa("用户数据", userMapper.selectByname(user));
+        }
+        return response;
+    }
+
+    @Override
+    public BaseResponse<User> searchByEmail(User user) {
+        BaseResponse<User> response=new BaseResponse<>();
+
+//        System.out.println(userMapper.selectByname(user));
+        if (userMapper.searchByEmail(user) == null) {
+            response.setError("查无此人");
+        }else {
+            response.setOkDaTa("用户数据", userMapper.searchByEmail(user));
+        }
+        return response;
     }
 
     @Override

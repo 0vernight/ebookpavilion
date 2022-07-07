@@ -3,13 +3,136 @@
 <head>
 
     <title>Registration</title>
+<!--    base标签永远固定相对路径的跳转的结果-->
+<!--    <base href="http://localhost:8080/">-->
 
     <link th:include="pages/commimp::head">
 
     <script type="text/javascript" th:inline="javascript">
+        //jq
         $(document).ready(function () {
             //事件
         });
+        //js
+        window.onload=function(){
+
+        };
+        // 验证信息
+        // 用户名，密码，密码确认，邮箱，验证码
+        $(function(event){
+
+            $("#username").bind("blur mouseout input propertyChang",function(event){
+                // alert(event);
+                if (event.type=="blur"){
+                    // alert($("#username").val());
+                    //var formdata=new FormData($( "#username")[0] );//取下标就是js,有$就是jq
+                    var name=$("#username").val().trim();
+                    var upatt=/^\w{4,16}$/;  //^打头 \w字母下划线  意思是头尾字母下划线的16位之内的值
+                    console.log(!upatt.test(name));
+                    if (!upatt.test(name)){      //不符合就给予提示
+                        // alert("buhefa");
+                        $("span.errorMsg").text("用户名不合法！");
+                        // return false;
+                    }else {
+                        $("span.errorMsg").text("");
+                    }
+                    var data1="username="+name;
+                    axios({
+                        url:'/serchByName',
+                        method:'post',
+                        data: data1
+                    }).then(res=>{
+                        if (res.data.code==200){
+                            //alert(res.data.message);
+                            // var email=res.data.data.getEmail();
+                            // window.location.href="/toLogin?email="+res.data.data.email;
+                        }else if (res.data.code==201){
+                            // alert(res.data.message)
+                            // alert("注册失败！原因已经存在数据库当中了，请换其他名字");
+                        }else if (res.data.code==202){
+                            // alert(res.data.message)
+                        }
+                        // alert(res.data.code);
+                        var $span=$("<span>该用户名可以用来注册！</span>");
+                        if (res.data.code==200)
+                            alert("请注意该用户名已经注册！");
+                        //$span.append($("p:first-letter"));
+                    }).catch(err=>{
+                        // console(err.data);
+                        alert(err.data);
+                    });
+
+                }
+            });
+            $("#email").bind("blur mouseout input propertyChang",function(event){
+                // alert(event);
+                if (event.type=="blur"){
+
+                    var email=$("#email").val().trim();
+                    var re=/^\w+@[a-z0-9]+\.[a-z]{2,4}$/;
+                    if (email==""||!re.test(email)){
+                        $("span.errorMsg").text("邮箱输入有误！");
+                        return false;
+                    }else {
+                        $("span.errorMsg").text("");
+                    }
+                    // alert("email blur="+email);
+                    var data2="email="+email;
+                    axios({
+                        url:'/searchByEmail',
+                        method:'post',
+                        data: data2
+                    }).then(res=>{
+                        if (res.data.code==200){
+                            $("#email").val("").focus();
+                            $("span.errorMsg").text("该邮箱已经被注册！请找回密码！");
+                            // if (confirm("该邮箱已经注册")){
+                            //     //$("#email").empty();
+                            //     // $("#email").text('');
+                            //     // $("#email").focus();
+                            // }
+                            //alert(res.data.message);
+                            // var email=res.data.data.getEmail();
+                            // window.location.href="/toLogin?email="+res.data.data.email;
+                        }else if (res.data.code==201){
+                            // alert(res.data.message)
+                            // alert("注册失败！原因已经存在数据库当中了，请换其他名字");
+                        }else if (res.data.code==202){
+                            // alert(res.data.message)
+                        }
+                        // alert(res.data.code);
+
+                    }).catch(err=>{
+                        // console(err.data);
+                        //alert(err.data);
+                    });
+
+                }
+            });
+
+            ///多个事件可以连续调用
+            $("#confirm").blur(function (event) {
+                // alert("conf blur");
+                if ($("#confirm").val()!=$("#password").val()) {
+                    // alert("两次的密码不一致，请查证！");
+                    $("span.errorMsg").text("两次密码不一致！");
+                    $("#confirm").focus();
+                }else {
+                    $("span.errorMsg").text("");
+                }
+            });
+
+            // $("#confirm").focus().select();
+            // $("#confirm").bind("input propertyChang",function(){
+            //     // alert(event);
+            // });
+
+            //jQuery的提交方式。
+            $("#submit").click(function (event){
+                // alert("submit");
+            });
+        });
+        //js的提交方式
         function fun(){
             var formdata=new FormData($( "#signupForm")[0] );
             // var o = $('form').serialize();
@@ -72,6 +195,7 @@
         <div class="login-wrap">
             <p>[[${msg}]]</p>
             <p>输入您的个人信息</p>
+            <span class="errorMsg" style="color: darkred;"></span>
             <input type="text" id="username" name="username" autofocus="" placeholder="实名" class="form-control">
             <input type="text" id="email" name="email" autofocus="" placeholder="邮箱" class="form-control">
             <input type="password" id="password" name="password" placeholder="密码大于4" class="form-control">

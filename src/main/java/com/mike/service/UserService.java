@@ -29,4 +29,8 @@ public interface UserService {
     BaseResponse<User> updateAvatar(User user, MultipartFile file) throws IOException;
 
     List<User> selectByIds(List<String> ids);
+
+    BaseResponse<User> searchByName(User user);
+
+    BaseResponse<User> searchByEmail(User user);
 }

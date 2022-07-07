@@ -34,7 +34,7 @@ public interface BookMapper {
     @Select("select * from book where id=#{id}")
     Book selectBook(Book book);
 
-    @Insert("insert into book (id,type,name,author,brief,pubyear,press,up_date,format,file,cover,page_num,word_num,uploader_id) values(#{id},#{type},#{name},#{author},#{brief},#{pubyear},#{press},#{upDate},#{format},#{file},#{cover},#{pageNum},#{wordNum},#{uploaderId})")
+    @Insert("insert into book (id,type,name,author,brief,pubyear,press,upload_date,format,file,cover,page_num,word_num,uploader_id) values(#{id},#{type},#{name},#{author},#{brief},#{pubyear},#{press},#{uploadDate},#{format},#{file},#{cover},#{pageNum},#{wordNum},#{uploaderId})")
     Long insertBook(Book book);
 
     @Select("select * from book where type=#{type} and name=#{name} and author=#{author} and format=#{format} and edition=#{edition}")

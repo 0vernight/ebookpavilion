@@ -9,7 +9,7 @@
         // alert(user)
         function addshelf(id) {
             var id = "id=" + id;
-            if (confirm("确定添加到我的书架吗？")){
+            if (confirm("确定添加到我的书架吗？"+"["+id+"]")){
                 axios({
                     url: '/shelf/add',
                     method: 'post',

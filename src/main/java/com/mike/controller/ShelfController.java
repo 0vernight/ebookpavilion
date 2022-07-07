@@ -50,7 +50,7 @@ public class ShelfController {
         }else {
             shelf.setUserId(user.getId());
             shelf.setBookId(book.getId());
-
+            System.out.println("shelfcontroller="+shelf);
             response=shelfService.addShelf(shelf);
         }
         System.out.println("shelf add="+response.getData());

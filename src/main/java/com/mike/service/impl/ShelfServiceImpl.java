@@ -57,7 +57,7 @@ public class ShelfServiceImpl implements ShelfService {
         BaseResponse<Shelf> response=new BaseResponse<>();
         shelf.setId(UUIDUtils.getUUID32());
         shelf.setAddTime(System.currentTimeMillis());
-//        System.out.println(shelf);
+        System.out.println("serverImpl="+shelf);
         //判断插入是否成功
         if (shelfMapper.hasAlready(shelf).size()>0){
             response.setError((bookMapper.selectById(shelf.getBookId())).getName()+":本书已经在你的书架上了，请勿重复添加");
