@@ -6,3 +6,10 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+page helper:
+#  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+#  dialect: mysql
+  auto-dialect: true

@@ -20,11 +20,13 @@ public interface UserMapper {
 
     List<User> test1(List<Long> ids);
 
-    @Select("Select * from user where email = #{email}  and password = #{password}")
-    User selectByUsernamePass(@Param("email")String email, @Param("password") String password);
+    @Select("Select * from user where 1=1 and username=#{username}   and password = #{password}")
+    User selectByUsernamePass(User user);
+    @Select("Select * from user where 1=1 and  email = #{email}  and password = #{password}")
+    User selectByEmailPass(User user);
 
     @Select("Select * from user where username = #{username}")
-    User selectByUsername(@Param("username") String username);
+    List<User> selectByUsername(@Param("username") String username);
 
     @Insert("insert into user (id, username,nickname, password, email, phone, age, sex, creation_date, birthday, address) values(#{id}, #{username},#{nickname}, #{password}, #{email}, #{phone}, #{age}, #{sex}, #{creationDate}, #{birthDay}, #{address})")
     Long register(User user);
@@ -47,8 +49,9 @@ public interface UserMapper {
     List<User> selectByIds(List<String> ids);
 
     @Select("select *  from user where username=#{username}")
-    User selectByname(User user);
+    List<User> selectByname(User user);
 
     @Select("select *  from user where email=#{email}")
     User searchByEmail(User user);
+
 }

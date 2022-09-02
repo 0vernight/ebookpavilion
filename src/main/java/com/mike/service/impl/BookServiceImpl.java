@@ -1,7 +1,10 @@
 package com.mike.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mike.DTO.BaseResponse;
 import com.mike.bean.Book;
+import com.mike.bean.Page;
 import com.mike.bean.Shelf;
 import com.mike.bean.User;
 import com.mike.mapper.BookMapper;
@@ -160,5 +163,35 @@ public class BookServiceImpl implements BookService {
 
 
         return response;
+    }
+
+    @Override
+    public Page<Book> page(int pageNum, int pageSize) {
+
+        Page<Book> bookPage = new Page<>();
+        bookPage.setPageNum(pageNum);
+        bookPage.setPageSize(pageSize);
+        int totalCont=bookMapper.totalCont();
+        bookPage.setTotalPage(totalCont);
+        List<Book> list=bookMapper.pageItems((pageNum-1)*pageSize,pageSize);
+        bookPage.setList(list);
+        bookPage.setTotalPage(totalCont%pageSize>0?(totalCont/pageSize)+1:(totalCont/pageSize));
+        System.out.println("page="+list);
+        System.out.println("pagenum="+bookPage.getPageNum());
+        System.out.println("totalPage="+bookPage.getTotalPage());
+        return bookPage;
+    }
+
+    @Override
+    public PageInfo<Book> pageInfo(int pageNum, int pageSize) {
+        //通过pageHlper来分页
+        PageHelper.startPage(pageNum,pageSize);
+        int totalCont=bookMapper.totalCont();
+        List<Book> list=bookMapper.pageItems((pageNum-1)*pageSize,pageSize);//必须跟上面的语句紧挨着自动写limit,隔行需要自己写limit
+
+        PageInfo<Book> pageInfo = new PageInfo<>(list);
+        System.out.println("pageInfo="+list);
+
+        return pageInfo;
     }
 }

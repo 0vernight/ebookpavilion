@@ -15,7 +15,7 @@ import java.util.Date;
  * @ConfigurationProperties在yml 或properties文件里设置是使用
  *
  */
-@Component
+@Component      //它的作用就是实现bean的注入
 
 @Data
 @AllArgsConstructor

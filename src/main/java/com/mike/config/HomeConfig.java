@@ -1,8 +1,5 @@
 package com.mike.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 /**
  * @author: 23236
  * @date: 2021/3/15 14:24
@@ -10,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 //@Configuration
+//@ComponentScan(basePackages = {""})
 public class HomeConfig {
 
 //    @Bean

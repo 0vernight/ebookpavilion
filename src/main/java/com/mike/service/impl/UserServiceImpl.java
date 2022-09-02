@@ -9,6 +9,7 @@ import com.mike.utils.MD5Utils;
 import com.mike.utils.UUIDUtils;
 import com.mike.utils.foperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
 //        想要判断前端的返回来的数据没有成功
     JudgeFormat judgeFormat;
+    @Value(value = "0")
+    private Double metaCoin;
     @Override
     public BaseResponse<List> selectAll() {
         BaseResponse<List> response=new BaseResponse<>();
@@ -49,7 +52,29 @@ public class UserServiceImpl implements UserService {
         judgeFormat=new JudgeFormat(user);
         if (judgeFormat.judegeUser()) {
             user.setPassword(MD5Utils.stringToMD5(user.getPassword()));
-            User reuser = userMapper.selectByUsernamePass(user.getEmail(),user.getPassword());
+            User reuser = userMapper.selectByUsernamePass(user);
+//            System.out.println("登录之前的查询="+reuser);
+            if (reuser!=null){
+                response.setCode(200)
+                        .setMessage("登录成功")
+                        .setData(reuser);
+            }else {
+                response.setCode(201)
+                        .setMessage("账号或密码错误");
+            }
+        }else {
+            response.setError("输入有误！");
+        }
+
+        return response;
+    }
+    @Override
+    public BaseResponse<User> loginByEmailPass(User user) {
+        BaseResponse<User> response=new BaseResponse<>();
+        judgeFormat=new JudgeFormat(user);
+        if (judgeFormat.judegeUser()) {
+            user.setPassword(MD5Utils.stringToMD5(user.getPassword()));
+            User reuser = userMapper.selectByEmailPass(user);
 //            System.out.println("登录之前的查询="+reuser);
             if (reuser!=null){
                 response.setCode(200)
@@ -147,10 +172,10 @@ public class UserServiceImpl implements UserService {
         BaseResponse<User> response=new BaseResponse<>();
 
 //        System.out.println(userMapper.selectByname(user));
-        if (userMapper.selectByname(user) == null) {
+        if (userMapper.selectByname(user).isEmpty()) {
             response.setError("查无此人");
         }else {
-            response.setOkDaTa("用户数据", userMapper.selectByname(user));
+            response.setOkDaTa("用户数据", userMapper.selectByname(user).get(0));
         }
         return response;
     }

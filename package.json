@@ -1,0 +1,10 @@
+{
+  "name": "ebookpavilion",
+  "version": "1.0.0",
+  "dependencies": {
+  },
+  "scripts": {
+    "springweb": "https://docs.spring.io/spring-boot/docs/2.4.4/reference/htmlsingle/#boot-features-developing-web-applications",
+    "link": "https://mikeroot.spring.io"
+  }
+}

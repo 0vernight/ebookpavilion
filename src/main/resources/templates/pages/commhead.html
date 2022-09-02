@@ -89,7 +89,7 @@
                             <li><a href="/toProfile"><i class="fa fa-user"></i> Profile</a></li>
                             <li><a href="/toSeting"><i class="fa fa-cog"></i> Settings</a></li>
                             <li><a href="/toLogout"><i class="fa fa-sign-out"></i> Log Out</a></li>
-                            <li><a th:href="${session.user}==null?('/toLogin')" href="/toLogin"><i
+                            <li><a th:href="${session.user}==null?('/toLogin'):('/toLogout')" href="/toLogin"><i
                                     class="fa fa-sign-in"></i> Log In</a></li>
                         </ul>
                     </li>

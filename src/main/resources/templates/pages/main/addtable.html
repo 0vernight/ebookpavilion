@@ -7,9 +7,35 @@
     <link th:include="pages/commimp::head">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/jquery-migrate-3.4.0.js"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+
     <script type="text/javascript" th:inline="javascript">
 
+
+
         $(function () {
+
+            var vue=new Vue({
+                "el":"#vuediv",
+                data:{
+                    msg:"痛并快乐着",
+                    gsm:"",
+                    uname:"mi"
+                },
+                methods:{
+                    myReverse:function (e) {
+                        this.gsm=this.msg.split("").reverse().join("");
+                    }
+                },
+                watch:{
+                    uname:function (e) {
+                        this.msg+=e;
+                    }
+                }
+            });
+
 
             //最后删除改成了函数
             var deleteRow =function (event) {
@@ -102,7 +128,7 @@
             // window.location.href = "http://stackoverflow.com";
             $("#userbyname").click(function () {
                 // alert("user search!");
-                $(location).attr('href',"http://localhost:8080/userbyname?username=mike");
+                $(location).attr('href',"http://localhost:8080/userbyname?action=users&username=mike");
             });
 
             $("#submitbtn1").click(function () {
@@ -145,12 +171,21 @@
             
             $("#attri").click(function () {
 
-                alert("request=");
+                // alert("request="+[[${#request.getClass().getName()}]]);
+                alert("request="+[[${#request.getContextPath()}]]);
+                alert("request="+$("#request").getContextPath());
 
             });
 
         });
 
+        var jsonObj={
+            "name":"mike",
+            "age":18,
+            "lucky":true,
+            "hobby":[4,true,"pe","math","technic"],
+            "lounge":"uy"
+        }
 
 
     </script>
@@ -190,8 +225,6 @@
 
 <!-- main content start-->
 <div class="main-content">
-
-
 <!--    action="/userbyname"-->
 <!--    enctype="multipart/form-data"-->
     <form  action="/userbyname" enctype="multipart/form-data" method="post" id="fileForm">
@@ -200,15 +233,26 @@
         密码:<input name="psw" value="123456"/><br/>
         年龄:<input name="age" value="23"/><br/>
         邮箱:<input name="mail" value="232343"/><br/>
-
         文件：<input type="file" name="file" id="file">
         <input type="submit" id="submitbtn">提交
     </form>
-    <div class="container-fluid bottom-right">右下角</div>
+
     <button type="button"  id="test1" class="test1">测试</button>
     <button type="button"  id="attri" class="attri">属性测试</button>
     <button type="button"  id="jquery" class="">addtable测试</button>
     <button type="button"  id="userbyname" class="">跳转user</button>
+
+    <div class="container-fluid bottom-right">右下角</div>
+    <div id="vuediv">
+        <span>{{msg}}</span></br>
+<!--        双向绑定-->
+        <!--        <input th:type="text" v-bind:value="uname">-->
+        <!--        <input th:type="text" :value="uname">-->
+        <input th:type="text"  v-model:value="uname" v-on:click="myReverse">
+        <span>{{uname}}</span>
+        <span>{{gsm}}</span>
+
+    </div>
 
     <table id="emptb" style="align-items: center;text-align:center;width: 300px;border:1px solid;">
         <tr>
@@ -237,6 +281,7 @@
             <td>65</td>
             <td><a href="">删除</a></td>
         </tr>
+
     </table>
 
     <div id="smallDiv"  class="center-block" th:align="center">

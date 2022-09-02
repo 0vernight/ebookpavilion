@@ -3,6 +3,9 @@
 <head>
     <title>Home Pages</title>
     <link th:include="pages/commimp::head">
+<!--    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>-->
+    <!-- import Vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
         var user =/*[[${session.user}]]*/{}
 
@@ -48,6 +51,26 @@
 
         }
 
+        $(function (event) {
+            var vue =new Vue({
+                "el":"#vuepagesize",
+                data:{
+                    pageSize:2
+                }
+            });
+            $("#pageSize").change(function (event) {
+                // alert("value"+$("#pageSize").val());
+                // alert("value="+[[${page.totalPage}]]);
+                var pageSize=1;
+                if($("#pageSize").val()<1){
+                    $("#pageSize").val(1);
+                }else if ($("#pageSize").val()>[[${page.totalPage}]]){
+                    $("#pageSize").val([[${page.totalPage}]]);
+                }
+                pageSize=$("#pageSize").val();
+            });
+            
+        });
 
     </script>
 
@@ -99,7 +122,7 @@
 
         <div class="directory-info-row">
             <!--            书籍开始循环显示-->
-            <div class="row" th:each="book,status:${bookList}">
+            <div class="row" th:each="book,status:${page.list}">
                 <div class="col-md-offset-2 col-md-8 col-sm-8">
                     <div class="panel">
                         <div class="panel-body">
@@ -144,6 +167,37 @@
                 </div>
 
             </div>
+        </div>
+        <div th:align="center" id="vuepagesize">
+            <nav class="mt-5" th:if="${page.totalPage>0}" th:fragment="pagination">
+                <!-- align-items-center -->
+                <ul class="pagination justify-content-center">
+                    <li >
+                        <input  th:type="Number" th:v-model:value="pageSize" th:name="pageSize" id="pageSize"  style="width: 40px;height:34px">
+                        size<span>{{pageSize}}</span>
+                        </input>
+                    </li>
+
+                    <li th:class="|page-item ${page.pageNum==1?'disabled':''}|">
+                        <a class="page-link" th:href="@{/(pageNum=1,pageSize=2)}">&laquo;main </a>
+                    </li>
+                    <li th:class="|page-item ${page.pageNum==1?'disabled':''}|">
+                        <a class="page-link"
+                           th:href="@{/(pageNum=${page.pageNum}-1)}">&laquo; Previous</a>
+                    </li>
+                    <li th:class="|page-item ${page.pageNum}|">
+                        <span th:value="${page.pageNum}">[[${page.pageNum}]]|[[${page.totalPage}]]</span>
+                    </li>
+
+                    <li  th:class="|page-item ${page.pageNum>=page.totalPage?'disabled':''}|">
+                        <a class="page-link" th:href="@{/(pageNum=${page.pageNum}+1,pageSize=)}">Next &raquo;</a>
+                    </li>
+                    <li th:class="|page-item ${page.pageNum==page.totalPage?'disabled':''}|">
+                        <a class="page-link" th:href="@{/(pageNum=${page.totalPage})}">final &raquo;</a>
+                    </li>
+
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

@@ -1,7 +1,9 @@
 package com.mike.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mike.DTO.BaseResponse;
 import com.mike.bean.Book;
+import com.mike.bean.Page;
 import com.mike.bean.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,4 +35,8 @@ public interface BookService {
     BaseResponse<Book> removeBook( Book book);
 
     BaseResponse<Book> removeShelfBook(Book book);
+
+    Page<Book> page(int pageNum,int pageSize);
+
+    PageInfo<Book> pageInfo(int pageNum, int pageSize);
 }

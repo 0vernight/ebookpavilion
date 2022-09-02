@@ -45,4 +45,10 @@ public interface BookMapper {
 
     @Delete("delete from book where id=#{id} ")
     int deleteBook(Book book);
+
+    @Select("select count(1) from book ")
+    int totalCont();
+
+    @Select("select * from book limit #{index},#{pageSize}")
+    List<Book> pageItems(int index, int pageSize);
 }

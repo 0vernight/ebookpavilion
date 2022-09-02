@@ -17,6 +17,7 @@ import java.util.List;
 public interface UserService {
     BaseResponse<List> selectAll();
     BaseResponse<User> loginByUsernamePass(User user);
+    BaseResponse<User> loginByEmailPass(User user);
     BaseResponse<User> register(User user);
     BaseResponse<User> getUserInfoByID(User user);
 

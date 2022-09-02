@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -59,12 +60,16 @@ public class WebController {
     }
 
     @RequestMapping({"/"})
-    public String index(HttpServletRequest request, Model model) {
+    public String index(HttpServletRequest request, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "3") int pageSize, Model model) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             user = new User();
         }
-        model.addAttribute("bookList", bookService.selectAll().getData());
+//        model.addAttribute("bookList", bookService.selectAll().getData());
+//        model.addAttribute("bookList", bookService.page(pageNum,pageSize).getItems());
+//        pageSize=2;
+        model.addAttribute("page", bookService.page(pageNum,pageSize));
+        model.addAttribute("pageInfo", bookService.pageInfo(pageNum,pageSize));
         model.addAttribute("user",userService.getUserInfoByID(user).getData());
         return "index";
     }
@@ -178,20 +183,57 @@ public class WebController {
     }
 
     @RequestMapping({"/toLogin"})
-    public String toLogin(User user, HttpServletRequest request, Model model) {
+    public String toLogin(User user, HttpServletRequest request,HttpServletResponse response, Model model) {
 //        model.addAttribute("user", user);
-        model.addAttribute("warnmsg", "请输入邮箱和密码登录！");
-        System.out.println("tologin");
+        model.addAttribute("warnmsg", "请输入邮箱并且输入密码登录！");
+        System.out.println("tologin=");
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            System.out.println("进来了cookie");
+            for (int i = 0; i < cookies.length; i++) {
+                System.out.println("res="+cookies[i].getName()+"="+cookies[i].getValue());
+                System.out.println(cookies[i].getValue().isEmpty() );
+                System.out.println(cookies[i].getValue() == "");
+                if (cookies[i].getName().equals("username")&&cookies[i].getValue() == "") {
+                    Cookie cookieUsername = new Cookie("username", null);
+//                Cookie cookieEmail = new Cookie("email", null);
+//                Cookie cookiePassword = new Cookie("password", null);
+//                Cookie rememberme = new Cookie("rememberme", "false");
+                    cookieUsername.setMaxAge(60*60*24*7);
+//                cookieEmail.setMaxAge(60*60*24*7);
+//                cookiePassword.setMaxAge(60*60*24*7);
+//                rememberme.setMaxAge(60*60*24*7);
+                    response.addCookie(cookieUsername);
+//                response.addCookie(cookieEmail);
+//                response.addCookie(cookiePassword);
+//                response.addCookie(rememberme);
+                }
+
+            }
+
+        }
+
+        System.out.println("session="+request.getSession().getAttribute("email")==null);
+
+//        BaseResponse<User> baseResponse = userService.loginByUsernamePass(user);
+//        if (baseResponse.getCode()==200) {
+//            //创建cookie保存用户名和密码
+//            Cookie cookie = new Cookie("username", baseResponse.getData().getUsername());
+//            cookie.setMaxAge(60 * 60 * 24 * 7);
+//            response.addCookie(cookie);
+//        }
         return "pages/main/login";
     }
 
     @RequestMapping("/toLogout")
-    public String toLogout(HttpServletRequest request, Model model) {
+    public String toLogout(HttpServletRequest request, Model model, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "4") int pageSize) {
 //        删除session当中的这个用户返回首页
         System.out.println("logout=" + request.getSession().getId());
         request.getSession().removeAttribute("user");
-        request.getSession().invalidate();
+        request.getSession().invalidate();      //销毁登录的信息
         model.addAttribute("bookList", bookService.selectAll().getData());
+        model.addAttribute("page", bookService.page(pageNum,pageSize));
+
         return "/index";
     }
 
@@ -225,12 +267,13 @@ public class WebController {
     }
 
     @RequestMapping("/toRemoveUser")
-    public String removeUser(User user, HttpServletRequest request, Model model) {
-//        User user = (User) request.getSession().getAttribute("user");
-        user.setId("20b3afe0d8db4ea7a212e54f8b7842c8");
+    public String removeUser(User user, HttpServletRequest request, Model model, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "4") int pageSize) {
+        user = (User) request.getSession().getAttribute("user");
+//        user.setId("20b3afe0d8db4ea7a212e54f8b7842c8");
         System.out.println("removeUser=" + user);
         userService.removeUser(user);
 //        model里面放入baserespose能在前端去得到的吗？
+        model.addAttribute("page", bookService.page(pageNum,pageSize));
         request.getSession().removeAttribute("user");
         request.getSession().invalidate();
         model.addAttribute("user", user);

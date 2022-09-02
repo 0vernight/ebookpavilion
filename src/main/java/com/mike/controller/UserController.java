@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
 /**
  * @author: 23236
@@ -44,8 +47,30 @@ public class UserController {
     @RequestMapping("/login")
     public BaseResponse<User> login(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
 //        前端用Ajax请求判断用户名和密码对了才跳转到首页，否则让用户重新输入“不跳转”
-        BaseResponse<User> baseResponse = userService.loginByUsernamePass(user);
+        System.out.println("rememberme="+request.getParameter("rememberme"));
+        String password = user.getPassword();
+        BaseResponse<User> baseResponse = userService.loginByEmailPass(user);
+        System.out.println("password down="+ password);
         if (baseResponse.getCode()==200){
+            //创建cookie保存用户名和密码
+            Cookie cookieUsername = new Cookie("username", baseResponse.getData().getUsername());
+            Cookie cookieEmail = new Cookie("email", baseResponse.getData().getEmail());
+            Cookie rememberme = new Cookie("rememberme", request.getParameter("rememberme")==null?"false":"true");
+            if (request.getParameter("rememberme")!=null) {
+                Cookie cookiePassword = new Cookie("password", password);
+                cookiePassword.setMaxAge(60*60*24*7);
+                response.addCookie(cookiePassword);
+            }else {
+                Cookie cookiePassword = new Cookie("password", null);
+                cookiePassword.setMaxAge(60*60*24*7);
+                response.addCookie(cookiePassword);
+            }
+            cookieUsername.setMaxAge(60*60*24*7);
+            cookieEmail.setMaxAge(60*60*24*7);
+            rememberme.setMaxAge(60*60*24*7);
+            response.addCookie(cookieUsername);
+            response.addCookie(cookieEmail);
+            response.addCookie(rememberme);
 //            session中保存整个user
             request.getSession().setAttribute("user",baseResponse.getData());
 //            System.out.println("login sessionId="+request.getSession().getId());
@@ -57,7 +82,7 @@ public class UserController {
 
 
     @RequestMapping("/register")
-    public BaseResponse<User> register(User user,String repassword, HttpServletRequest request,Model model) {
+    public BaseResponse<User> register(User user,String repassword, HttpServletRequest request,HttpServletResponse response,Model model) {
 //        System.out.println(user+"repassword"+repassword);
 //        遍历：keySet() / values() / entrySet()
 //        Map<String, String[]> parameterMap = request.getParameterMap();
@@ -71,8 +96,22 @@ public class UserController {
 //            System.out.println("in the it="+me.getKey() + me.getValue());
 //        }
 
-        BaseResponse<User> response=userService.register(user);
-        return response;
+        String auth = (String) request.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+        String auth1 = request.getParameter("auth");
+
+        System.out.println("session="+auth);
+        System.out.println("input="+request.getParameter("auth"));
+        BaseResponse<User> res=new BaseResponse<>();
+        if (request.getParameter("auth").equalsIgnoreCase(auth)) {
+            //用完了即删除
+            request.getSession().removeAttribute(KAPTCHA_SESSION_KEY);      //删除验证码
+            res=userService.register(user);
+        }else if(auth!=null&&auth !=request.getParameter("auth")){
+            res.setError("验证码输入错误！");
+        }else {
+            res.setError("不能重复提交表单！");
+        }
+        return res;
     }
     @RequestMapping("/serchByName")
     public BaseResponse<User> searchName(User user,@RequestParam(value = "username",required = true)String username, HttpServletRequest request,Model model) {

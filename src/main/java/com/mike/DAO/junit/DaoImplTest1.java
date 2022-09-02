@@ -4,6 +4,7 @@ import com.mike.DAO.Impl.CustomerImpl;
 import com.mike.DAO.Impl.UserDaoImpl;
 import com.mike.bean.Customer;
 import com.mike.bean.User;
+import com.mike.service.BookService;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @description: 测试类
  **/
 public class DaoImplTest1 {
-
+    BookService bookService;
     CustomerImpl customer=new CustomerImpl();
     UserDaoImpl userimpl=new UserDaoImpl();
 
@@ -28,4 +29,5 @@ public class DaoImplTest1 {
         List<Customer> customers = customer.queryAll();
         System.out.println("customerTest="+customers);
     }
+
 }

@@ -131,6 +131,10 @@
             $("#submit").click(function (event){
                 // alert("submit");
             });
+            $("#auth_img").click(function (e) {
+                // alert("jinlaile"+this.src);
+                this.src="/kaptcha";
+            });
         });
         //js的提交方式
         function fun(){
@@ -188,7 +192,7 @@
     <form id="signupForm" class="form-signin" >
         <div class="form-signin-heading text-center">
             <h1 class="sign-title">新用户注册</h1>
-            <img src="images/book.png" alt="logo"/>
+            <img src="images/book.png" style="width: 100px;height: 100px;" alt="logo"/>
         </div>
 
 
@@ -213,11 +217,13 @@
                 </label>
             </div>
             <p>输入您的帐户详细信息如下:生日</p>
-            <input type="date" name="birthDay" onblur="birth(this.value)" placeholder="生日" class="form-control">
+            <input type="date" name="birthDay" th:value="${#dates.format(#dates.create('2022','10','01'),'yyyy-MM-dd')}" onblur="birth(this.value)" placeholder="生日" class="form-control" style="height: 30px;">
             <input type="text" name="phone" placeholder="电话" class="form-control">
             <input type="text" name="age" id="age"  placeholder="年龄" class="form-control">
             <input type="text" name="address" placeholder="地址" class="form-control">
 
+            <input type="text" name="auth" style="" th:placeholder="请输入验证码">
+            <img th:type="images" th:id="auth_img" th:src="@{/kaptcha}" style="width: 100px;">
 
             <label class="checkbox">
                 <input type="checkbox" value="agree this condition"> 我同意服务条款和隐私政策
