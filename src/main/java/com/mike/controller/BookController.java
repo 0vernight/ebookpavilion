@@ -6,6 +6,7 @@ import com.mike.bean.User;
 import com.mike.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ import java.util.List;
  * @description:
  */
 
-@RestController
+    @RestController
 public class BookController {
 
     @Autowired
@@ -35,8 +36,7 @@ public class BookController {
     }
     @Autowired
     BookService bookService;
-
-
+    @CrossOrigin
     @RequestMapping("/showAllBook")
     public BaseResponse<List> showAllBook(){
 
