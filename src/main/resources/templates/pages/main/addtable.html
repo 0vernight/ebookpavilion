@@ -22,7 +22,12 @@
                 data:{
                     msg:"痛并快乐着",
                     gsm:"",
-                    uname:"mi"
+                    uname:"mi",
+                    text: {
+                        name: "mi",
+                        age: 18
+                    },
+                    array:[1,2,3,4]
                 },
                 methods:{
                     myReverse:function (e) {
@@ -30,8 +35,19 @@
                     }
                 },
                 watch:{
-                    uname:function (e) {
-                        this.msg+=e;
+                    //watch监听器，只能监听第一次，
+                    //也就是在监听对象的时候，虽然对象中的属性值发生了改变
+                    //但对象的首地址没有改变，所以监听器认为没有改变数据
+                    //当想要监听对象的时候，想要开启深度监听
+                    //deep:true
+                    text: {
+                        handler:function () {
+                            alert('监听到了')
+                        },
+                        deep:true
+                    },
+                    uname:function (newData,oldData) {
+                        this.msg+=oldData+newData;
                     }
                 }
             });

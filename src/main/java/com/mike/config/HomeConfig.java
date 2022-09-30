@@ -6,8 +6,13 @@ package com.mike.config;
  * @description:
  */
 
+
+//    设置为配置类
 //@Configuration
+//    扫描组件
 //@ComponentScan(basePackages = {""})
+//    注解驱动
+//    @EnableWebMvc
 public class HomeConfig {
 
 //    @Bean
