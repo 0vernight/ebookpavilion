@@ -40,6 +40,9 @@ public class UserController {
 
     @RequestMapping("/userall")
     public BaseResponse<List> selectAll(@RequestParam(value = "name",required = false)String name){
+        System.out.println("---------------------------");
+        System.out.println(user);
+        System.out.println("---------------------------");
         return userService.selectAll();
     }
 

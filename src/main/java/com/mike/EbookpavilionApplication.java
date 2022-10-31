@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @ServletComponentScan( "com.mike.servlet")      //自定义servlet
+//@MapperScan("com.mike.mapper")
 public class EbookpavilionApplication {
 
     public static void main(String[] args) {

@@ -125,6 +125,13 @@
             <version>2.1.4</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.webjars.npm/axios -->
         <dependency>
@@ -200,12 +207,22 @@
             <version>2.3.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.webjars.npm/vue -->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.webjars.npm/vue &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.webjars.npm</groupId>-->
+<!--            <artifactId>vue</artifactId>-->
+<!--            <version>3.2.37</version>-->
+<!--        </dependency>-->
+
+
+        <!--        20221006 ssm学习，关于mybatis的逆向工程包-->
+        <!-- https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core -->
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>vue</artifactId>
-            <version>3.2.37</version>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.4.1</version>
         </dependency>
+
 
 
 
@@ -218,12 +235,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+<!--                    <excludes>-->
+<!--                        <exclude>-->
+<!--                            <groupId>org.project.lombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                        </exclude>-->
+<!--                    </excludes>-->
                 </configuration>
             </plugin>
             <plugin>

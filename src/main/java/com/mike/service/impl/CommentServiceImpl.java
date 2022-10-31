@@ -1,5 +1,6 @@
 package com.mike.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mike.DTO.BaseResponse;
 import com.mike.DTO.CommentDto;
 import com.mike.DTO.ItemConverter;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> implements CommentService {
     @Autowired
     Comment comment;
 

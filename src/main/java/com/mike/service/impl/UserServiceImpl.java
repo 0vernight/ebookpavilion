@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author: 23236
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userMapper.selectAll();
         response.setCode(200).setMessage("success!:")
                 .setData(users);
+
         return response;
     }
 
@@ -93,6 +96,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse<User> register(User user) {
+//        InputStream resourceAsStream = Resources.getResourceAsStream("mybatis-config.xml").;
+//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
+//        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+//        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+//        mapper.selectAll();
         BaseResponse<User> response=new BaseResponse<>();
         judgeFormat=new JudgeFormat(user);
         if (judgeFormat.judegeUser()) {

@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 public class BaseResponse<T> {
     private int code;
     private String message;
-    private int  total;
+    private Long  total;
     private int nextPage;
     private T data;
 

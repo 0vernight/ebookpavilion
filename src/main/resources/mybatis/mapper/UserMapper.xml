@@ -9,30 +9,51 @@
         </if>
         <if test="email!= null">
             and email = #{email}
-
         </if>
     </sql>
+<!--    resulttype 和resultmap的区别：-->
+<!--    resultType：设置默认的映射关系-->
+<!--    resultMap：设置自定义映射关系-->
+
     <resultMap id="resultMap" type="com.mike.bean.User">
-        <result column="id" property="id"/>
-        <result column="username" property="username"/>
+<!--        主键通过id,其他的普通属性字段通过result来进行映射-->
+        <id property="id" column="id"/>
+        <result property="id" column="id" />
+        <result property="username" column="username"/>
+        <result property="creationDate" column="creation_date"/>
+<!--        多对一-->
+<!--        <association property="" javaType="">-->
+<!--            <id></id>-->
+<!--            <result></result>-->
+<!--        </association>-->
+<!--        设置分布查询，通过select来设置分布查询语句，fetchType是当开启全局延迟加载时可以设置加载模式-->
+<!--        <association property=""-->
+<!--                     select=""-->
+<!--                     column=""-->
+<!--                     fetchType="eager"-->
+<!--        ></association>-->
+<!--        一对多-->
+<!--        <collection property="" ofType="">-->
+<!--            <id property="" column=""></id>-->
+<!--            <result property="" column=""></result>-->
+<!--        </collection>-->
     </resultMap>
 
     <sql id="base_Column_list">
-        id
-        ,username,age
+        id,username,age
     </sql>
 
     <sql id="insert_column_list">
-        #{id}
-        ,
-        #{username}
+        #{id},#{username}
     </sql>
 
     <sql id="table">
         user
     </sql>
-    <insert id="test1">
-        insert into<include refid="table"/>(<include refid="base_Column_list"/>)
+<!--    useGeneratedkeys:设置当前标签中的sqL使用了自增的主键-->
+<!--    keyProperty:将自增的主键的值赋值给传输到映射文件中参数的某个属性-->
+    <insert id="test1" useGeneratedKeys="true" keyProperty="id">
+        insert into<include refid="table"/>  (<include refid="base_Column_list"/>)
         values (<include refid="insert_column_list"/>)
     </insert>
     <select id="selectAll" resultType="com.mike.bean.User">
@@ -49,10 +70,15 @@
         <include refid="base_Column_list"/>
         from
         <include refid="table"/>
-        where
-        <foreach collection="list" item="item" index="index" open="(" close=")" separator="or">
-            id = #{item}
+        where id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+             #{item}
         </foreach>
+
+<!--        where -->
+<!--        <foreach collection="list" item="item" index="index" open="" close="" separator="or">-->
+<!--            id = #{item}-->
+<!--        </foreach>-->
     </select>
     <select id="selectByIds" resultType="com.mike.bean.User">
         select * from

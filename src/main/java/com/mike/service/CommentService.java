@@ -1,5 +1,6 @@
 package com.mike.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.mike.DTO.BaseResponse;
 import com.mike.DTO.CommentDto;
 import com.mike.bean.Comment;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 
 
-public interface CommentService {
+public interface CommentService extends IService<Comment> {
     BaseResponse<Comment> addCmmt(Comment comment);
 
     List<CommentDto> getCommentsByBookId(String bookId);

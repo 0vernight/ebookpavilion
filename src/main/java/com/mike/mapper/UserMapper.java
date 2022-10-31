@@ -18,7 +18,7 @@ public interface UserMapper {
 //    @Select("Select * from user")
     List<User> selectAll();
 
-    List<User> test1(List<Long> ids);
+    List<User> test1(@Param("ids") List<String> ids);
 
     @Select("Select * from user where 1=1 and username=#{username}   and password = #{password}")
     User selectByUsernamePass(User user);

@@ -1,4 +1,5 @@
 
+user.avatar: classpath*:/mybatis/**/mapper/**/*.xml
 server:
   port: 8181
 spring:
@@ -27,3 +28,15 @@ page helper:
   params: count=countSql
 #  dialect: mysql
   auto-dialect: true
+
+mybatis-plus:
+  configuration:
+    #mybatis-plus输出sql语句的设置
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/mybatis/**/mapper/**/*.xml
+#  global-config:
+#    db-config:
+#      #更改所有的表的前缀名字
+#      table-prefix: t
+#      id-type: auto
+

@@ -2,10 +2,29 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
+    <!--    The content of element type "configuration" must match
+    "(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,
+    objectWrapperFactory?,reflectorFactory?,plugins?,environments?,
+    databaseIdProvider?,mappers?)".-->
+    <properties resource="application.properties" url="" >
+
+    </properties>
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+<!--        <setting name="lazyLoadingEnable" value="true"/>-->
+<!--        <setting name="aggressiveLazyLodingEnabale" value=""/>-->
     </settings>
+    <typeAliases>
+<!--        属性：type，alias-->
+        <typeAlias type=""></typeAlias>
+<!--        按照包来管理类名-->
+        <package name=""/>
+    </typeAliases>
+    <plugins>
+        <plugin interceptor=""></plugin>
+    </plugins>
 
 <!--    这是一个mybatis全局配置文件，因为全部已经配好了不用-->
 <!--    <environments default="development">-->
@@ -19,7 +38,9 @@
 <!--            </dataSource>-->
 <!--        </environment>-->
 <!--    </environments>-->
+
 <!--    <mappers>-->
 <!--        <mapper resource="org/mybatis/example/BlogMapper.xml"/>-->
+<!--        <package name=""/>-->
 <!--    </mappers>-->
 </configuration>

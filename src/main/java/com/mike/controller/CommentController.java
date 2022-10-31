@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,16 @@ public class CommentController {
 
         response=commentService.addCmmt(comment);
 
+        return response;
+    }
+    @RequestMapping("/getCommentCount")
+    public BaseResponse<Comment> getCommentCount(Comment comment,Model model){
+        BaseResponse<Comment> response = new BaseResponse<>();
+        System.out.println("getCommentCount ="+comment);
+
+        response.setTotal(commentService.count());
+
+        System.out.println(response);
         return response;
     }
 
