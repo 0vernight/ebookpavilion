@@ -24,7 +24,6 @@ import java.util.Date;
 @ToString
 //实体类与数据库表的名字不一致时可以通过一下的注解更改，或者在配置里global-config： table-prefix：t
 //@TableName("tcommet")
-
 public class Comment {
 //    @TableId(value = "uid",type = IdType.AUTO)
     private String id;
