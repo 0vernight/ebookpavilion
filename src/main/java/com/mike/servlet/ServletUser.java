@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 
-//通过反射来调用对饮的方法
+//通过反射来调用对应的方法
 //@ResponseBody
-//@RestController
+@RestController
 @WebServlet(name = "ServletUser", value = "/userbyname")
 public class ServletUser extends BaseServlet {
     UserDaoImpl userdaoimpl = new UserDaoImpl();
@@ -41,7 +42,7 @@ public class ServletUser extends BaseServlet {
         //早期用ta来在一个servlet当中实现，多个功能
         //html 有一个隐藏的名字为action的标签根据他来区分
         String action = request.getParameter("action");
-        System.out.println("action=" + action);
+        System.out.println("servlet user action=" + action);
         if ("login".equals(action)) {
             System.out.println("开始处理登陆的逻辑 ");
         } else if ("uploadfile".equals(action)) {

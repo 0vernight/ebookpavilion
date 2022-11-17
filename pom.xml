@@ -223,6 +223,13 @@
             <version>1.4.1</version>
         </dependency>
 
+<!--        aop切面编程-->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>5.3.23</version>
+        </dependency>
 
 
 
