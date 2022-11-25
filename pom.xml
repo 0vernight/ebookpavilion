@@ -231,6 +231,13 @@
             <version>5.3.23</version>
         </dependency>
 
+<!--        20221125添加网页链接redis的-->
+        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.3.1</version>
+        </dependency>
 
 
 

@@ -12,6 +12,8 @@ import com.mike.service.UserService;
 import com.mike.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,9 @@ import java.util.stream.Collectors;
  * @date: 2021/3/25 19:56
  * @description:
  */
-
-@Service
+    @Transactional
+    @EnableTransactionManagement
+    @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> implements CommentService {
     @Autowired
     Comment comment;
@@ -38,6 +41,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> imple
 
     ItemConverter itemConverter = ItemConverter.INSTANCE;
 
+//    @Transactional
     @Override
     public BaseResponse<Comment> addCmmt(Comment comment) {
         BaseResponse<Comment> response = new BaseResponse<>();
@@ -54,6 +58,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> imple
         } else {
             response.setError("评论空，失败!");
         }
+        System.out.println("事务处理测试");
+//        int res=10/0;
         return response;
     }
 
