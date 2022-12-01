@@ -285,4 +285,19 @@ public class WebController {
 
         return "pages/main/seting";
     }
+
+    @RequestMapping({"/socket"})
+    public String socket(HttpServletRequest request, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "3") int pageSize, Model model) {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            user = new User();
+        }
+//        model.addAttribute("bookList", bookService.selectAll().getData());
+//        model.addAttribute("bookList", bookService.page(pageNum,pageSize).getItems());
+        pageSize=2;
+        model.addAttribute("page", bookService.page(pageNum,pageSize));
+        model.addAttribute("pageInfo", bookService.pageInfo(pageNum,pageSize));
+        model.addAttribute("user",userService.getUserInfoByID(user).getData());
+        return "pages/main/websocketclient";
+    }
 }
