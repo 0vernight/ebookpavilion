@@ -1,23 +1,14 @@
-package com.mike.controller;
+package com.mike.Handler;
 
 import com.google.gson.Gson;
 import com.mike.bean.User;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -25,41 +16,15 @@ import java.util.*;
 
 /**
  * @Author: 23236
- * @createTime: 2022/11/29   14:23
- * @description: 专门用来测试socket的控制器
+ * @createTime: 2022/12/3   16:15
+ * @description:
  **/
-////
-@RestController("/chat/{name}")
-//@ServerEndpoint("/chat/{name}")
-
-public class SocketController extends  TextWebSocketHandler {    //BinaryWebSocketHandler 就两种
+@Component
+public class WebSocketHandler extends TextWebSocketHandler {    //BinaryWebSocketHandler 就两种
 
     @Autowired
     User user;
     List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
-
-    @RequestMapping("/chatt/{username}")
-    @ResponseBody   //been 有user用的所以可以映射
-//    @RequestBody  //因为前端没给user实体类所不能映射？
-    public void chat(@PathVariable(value = "username" ,required = false)String name,
-                       User user,
-                     HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
-//        获取路径参数
-//        方法上加@RequestBody @ResponseBody
-//        @PathParam(value = "name")String name//null
-//        @PathVariable(value = "name" ,required = false)//可以获取
-//        @RequestParam(value = "name" ,required = false,defaultValue = "")//不行
-        System.out.println("url:"+request.getRequestURL());
-        System.out.println("url:"+request.getRequestURI());
-        System.out.println("进入了测试，聊天人："+name);
-        System.out.println("进入了测试，聊天人1："+user.getUsername());
-        System.out.println("即将要调用WebSocketConfig的ws-chat");
-//        不知道为什么重定向不能进行
-//        response.sendRedirect("/test1");
-        System.out.println(request.getSession().getAttributeNames().toString());
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ws-chat/"+name);
-        requestDispatcher.forward(request,response);
-    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

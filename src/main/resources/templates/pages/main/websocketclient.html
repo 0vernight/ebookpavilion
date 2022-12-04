@@ -16,11 +16,13 @@
 
         function connect() {
             // alert("点击了connect!")
-            let url="ws://localhost:8080/chat";
+            let url="ws://localhost:8080//chatt";
             let name = document.getElementById("name").value;
-            url+="/"+name;
+            url+="/1?username="+name;
             ws = new WebSocket(url);
             ws.onmessage = function (e) {
+                // alert(data)
+                console.log(e)
                 printMessage(e.data);
             }
             document.getElementById("connectButton").disabled = true;
@@ -32,6 +34,7 @@
             let messages = document.getElementById("messages");
             let messageData = JSON.parse(data);
             let newMessage = document.createElement("div");
+            // newMessage.innerHTML = data;
             newMessage.innerHTML = messageData.name + " : " + messageData.message;
             messages.appendChild(newMessage);
         }

@@ -58,7 +58,6 @@ public class WebController {
 
         return "pages/main/addtable";
     }
-
     @RequestMapping({"/"})
     public String index(HttpServletRequest request, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "3") int pageSize, Model model) {
         User user = (User) request.getSession().getAttribute("user");
