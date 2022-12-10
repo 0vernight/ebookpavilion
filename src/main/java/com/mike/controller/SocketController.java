@@ -1,49 +1,53 @@
 package com.mike.controller;
 
-import com.google.gson.Gson;
 import com.mike.bean.User;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author: 23236
  * @createTime: 2022/11/29   14:23
  * @description: 专门用来测试socket的控制器
  **/
-////
+
+
 @RestController("/chat/{name}")
 //@ServerEndpoint("/chat/{name}")
 
-public class SocketController extends  TextWebSocketHandler {    //BinaryWebSocketHandler 就两种
+public class SocketController {
 
     @Autowired
     User user;
     List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
 
-    @RequestMapping("/chatt/{username}")
+
+    @RequestMapping("/chat/{parm")
     @ResponseBody   //been 有user用的所以可以映射
 //    @RequestBody  //因为前端没给user实体类所不能映射？
-    public void chat(@PathVariable(value = "username" ,required = false)String name,
-                       User user,
-                     HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
+    public void chat(@PathVariable(value = "fromUser" ,required = false)String name,User user,
+                     HttpServletRequest request, HttpServletResponse response,
+                     Model model) throws IOException, ServletException {
 //        获取路径参数
 //        方法上加@RequestBody @ResponseBody
 //        @PathParam(value = "name")String name//null
@@ -61,150 +65,84 @@ public class SocketController extends  TextWebSocketHandler {    //BinaryWebSock
         requestDispatcher.forward(request,response);
     }
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        super.afterConnectionEstablished(session);
-        webSocketSessions.add(session);
-        System.out.println("键连接成功:" + session);
-//        System.out.println("idinfo:"+session.getId()+"\nname:"+name);
-
-//        ServerSocket serverSocket = new ServerSocket(83);
-//        try {
-//            while(true) {
-//                Socket socket = null;
-//                socket = serverSocket.accept();
-//                //这边获得socket连接后开启一个线程监听处理数据
-//                SocketServerThread socketServerThread = new SocketServerThread(socket);
-//                new Thread(socketServerThread).start();
-//            }
-//        } catch(Exception e) {
-////            log.error("Socket accept failed. Exception:{}", e.getMessage());
-//        } finally {
-//            if(serverSocket != null) {
-//                serverSocket.close();
-//            }
-//        }
-    }
-
-    @Override
-    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        super.handleMessage(session, message);
-//        System.out.println("session:"+session);
-//        System.out.println("message:"+message);
-
-        for (WebSocketSession webSocketSession : webSocketSessions) {
-//            if (webSocketSession.getId() != session.getId()) {
-            webSocketSession.sendMessage(message);
-//            }
-        }
-        System.out.println("handlemessage处理成功:" + session + "\n" + message);
-
-        String payload = message.getPayload().toString();
-        System.out.println(payload);
-        GsonJsonParser gsonJsonParser = new GsonJsonParser();
-        Map<String, Object> stringObjectMap = gsonJsonParser.parseMap(payload.toString());
-        System.out.println("gson:" + stringObjectMap);
-        Gson gson = new Gson();
-        String s = gson.toJson(stringObjectMap);
-        System.out.println("tojson:" + s);
-        System.out.println("payload==s:" + payload.equals(s));
-
-        Map<String, String> map = new HashMap<>();
-
-        JSONObject jsonObject = new JSONObject(payload);
-        System.out.println(jsonObject.toMap().get("name") + ":" + jsonObject.toMap().get("message"));
-    }
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        super.handleTextMessage(session, message);
-        System.out.println("handleTextMessage进来了就要干事了");
-//        for (WebSocketSession webSocketSession : webSocketSessions) {
-//            if (webSocketSession.getId() != session.getId()) {
-//                webSocketSession.sendMessage(message);
-//            }
-//        }
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        super.afterConnectionClosed(session, status);
-        webSocketSessions.remove(session);
-    }
-
-    @Override
-    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-        super.handlePongMessage(session, message);
-    }
-
-    @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        super.handleTransportError(session, exception);
-    }
-
-
-    @Override
-    public boolean supportsPartialMessages() {
-        return super.supportsPartialMessages();
-    }
-
 
 }
 
 
-class SocketServerThread implements Runnable {
 
-    private Socket socket;
+//@ServerEndpoint
+//通过这个 spring boot 就可以知道你暴露出去的 ws 应用的路径，有点类似我们经常用的@RequestMapping。比如你的启动端口是8080，而这个注解的值是ws，那我们就可以通过 ws://127.0.0.1:8080/ws 来连接你的应用
+//@OnOpen
+//当 websocket 建立连接成功后会触发这个注解修饰的方法，注意它有一个 Session 参数
+//@OnClose
+//当 websocket 建立的连接断开后会触发这个注解修饰的方法，注意它有一个 Session 参数
+//@OnMessage
+//当客户端发送消息到服务端时，会触发这个注解修改的方法，它有一个 String 入参表明客户端传入的值
+//@OnError
+//当 websocket 建立连接时出现异常会触发这个注解修饰的方法，注意它有一个 Session 参数
+//        另外一点就是服务端如何发送消息给客户端，服务端发送消息必须通过上面说的 Session 类，通常是在@OnOpen 方法中，当连接成功后把 session 存入 Map 的 value，key 是与 session 对应的用户标识，当要发送的时候通过 key 获得 session 再发送，这里可以通过 session.getBasicRemote_().sendText(_) 来对客户端发送消息。
 
-    public SocketServerThread(Socket socket) {
-        this.socket = socket;
+
+@ServerEndpoint(value = "/chatting/2")
+@Component
+class WebSocketServerThread {
+
+//    private Socket socket;
+    private static final Map<String,Session> sessionMap =new ConcurrentHashMap<>();
+
+//    public WebSocketServerThread(Socket socket) {
+//        this.socket = socket;
+//    }
+
+    @OnOpen
+    public void onOpen(Session session, @PathParam("username")String username){
+        System.out.println("onOpen ="+username);
     }
-
-    @Override
-    public void run() {
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            in = socket.getInputStream();
-            out = socket.getOutputStream();
-            Integer sourcePort = socket.getPort();
-            int maxLen = 2048;
-            byte[] contextBytes = new byte[maxLen];
-            int realLen;
-            StringBuffer message = new StringBuffer();
-            BIORead:
-            while (true) {
-                try {
-                    while ((realLen = in.read(contextBytes, 0, maxLen)) != -1) {
-                        message.append(new String(contextBytes, 0, realLen));
-                        /*
-                         * 我们假设读取到“over”关键字，
-                         * 表示客户端的所有信息在经过若干次传送后，完成
-                         * */
-                        if (message.indexOf("over") != -1) {
-                            break BIORead;
-                        }
-                    }
-
-                    //下面打印信息
-//                    log.info("服务器(收到来自于端口：" + sourcePort + "的信息：" + message);
-                    //下面开始发送信息
-                    out.write("回发响应信息！".getBytes());
-                    //关闭
-                    out.close();
-                    in.close();
-                    this.socket.close();
-                } catch (Exception e) {
-
-                    throw new RuntimeException(e);
-                } finally {
-                    new Throwable();
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Override
+//    public void run() {
+//        InputStream in = null;
+//        OutputStream out = null;
+//        try {
+//            in = socket.getInputStream();
+//            out = socket.getOutputStream();
+//            Integer sourcePort = socket.getPort();
+//            int maxLen = 2048;
+//            byte[] contextBytes = new byte[maxLen];
+//            int realLen;
+//            StringBuffer message = new StringBuffer();
+//            BIORead:
+//            while (true) {
+//                try {
+//                    while ((realLen = in.read(contextBytes, 0, maxLen)) != -1) {
+//                        message.append(new String(contextBytes, 0, realLen));
+//                        /*
+//                         * 我们假设读取到“over”关键字，
+//                         * 表示客户端的所有信息在经过若干次传送后，完成
+//                         * */
+//                        if (message.indexOf("over") != -1) {
+//                            break BIORead;
+//                        }
+//                    }
+//
+//                    //下面打印信息
+////                    log.info("服务器(收到来自于端口：" + sourcePort + "的信息：" + message);
+//                    //下面开始发送信息
+//                    out.write("回发响应信息！".getBytes());
+//                    //关闭
+//                    out.close();
+//                    in.close();
+//                    this.socket.close();
+//                } catch (Exception e) {
+//
+//                    throw new RuntimeException(e);
+//                } finally {
+//                    new Throwable();
+//                }
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
 
 

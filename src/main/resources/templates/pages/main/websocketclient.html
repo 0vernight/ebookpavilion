@@ -13,21 +13,36 @@
 
     <script type="application/javascript">
         let ws;
+        var ipPort = window.location.host;
+        var sessions = sessionStorage;
+        let url;
+
 
         function connect() {
             // alert("点击了connect!")
-            let url="ws://localhost:8080//chatt";
-            let name = document.getElementById("name").value;
-            url+="/1?username="+name;
+            console.log(this.sessions)
+            // console.log(this.sessions.getItem(""))
+            url = "ws://" + ipPort + "//chatting";
+            url = "ws://" + ipPort + "//chat";
+            let username = document.getElementById("username").value;
+            let tousername = document.getElementById("tousername").value;
+            if (username == "" || tousername == "") {
+                if (!confirm("连接用户不能为空,是否继续！"))
+                    return;
+            }
+            url += "/6339?fromUser=" + username + "&toUser=" + tousername;
+            // 检查浏览器是否支持websocket
+            if (typeof (WebSocket) == "undefined") alert("你的浏览器不支持websocket 服务请查证！");
             ws = new WebSocket(url);
             ws.onmessage = function (e) {
-                // alert(data)
+                // alert(e.data)
                 console.log(e)
+                console.log(e.data)
                 printMessage(e.data);
             }
             document.getElementById("connectButton").disabled = true;
             document.getElementById("connectButton").value = "Connected";
-            document.getElementById("name").disabled = true;
+            document.getElementById("username").disabled = true;
         }
 
         function printMessage(data) {
@@ -35,20 +50,21 @@
             let messageData = JSON.parse(data);
             let newMessage = document.createElement("div");
             // newMessage.innerHTML = data;
-            newMessage.innerHTML = messageData.name + " : " + messageData.message;
+            newMessage.innerHTML = messageData.username + " : " + messageData.message;
             messages.appendChild(newMessage);
         }
 
         function sendToGroupChat() {
             let messageText = document.getElementById("message").value;
-            document.getElementById("message").value="";
-            let name = document.getElementById("name").value;
+            document.getElementById("message").value = "";
+            let username = document.getElementById("username").value;
             let messageObject = {
-                name: name,
+                username: username,
                 message: messageText
             }
             // alert(JSON.stringify(messageObject))
-            ws.send(JSON.stringify(messageObject))
+            ws.send(JSON.stringify(messageObject));
+            printMessage(JSON.stringify(messageObject));
         }
     </script>
 
@@ -56,22 +72,22 @@
         var user =/*[[${session.user}]]*/{}
 
         $(function (event) {
-            var vue =new Vue({
-                "el":"#vuepagesize",
-                data:{
-                    pageSize:2
+            var vue = new Vue({
+                "el": "#vuepagesize",
+                data: {
+                    pageSize: 2
                 }
             });
             $("#pageSize").change(function (event) {
                 // alert("value"+$("#pageSize").val());
                 // alert("value="+[[${page.totalPage}]]);
-                var pageSize=1;
-                if($("#pageSize").val()<1){
+                var pageSize = 1;
+                if ($("#pageSize").val() < 1) {
                     $("#pageSize").val(1);
-                }else if ($("#pageSize").val()>[[${page.totalPage}]]){
+                } else if ($("#pageSize").val() > [[${page.totalPage}]]) {
                     $("#pageSize").val([[${page.totalPage}]]);
                 }
-                pageSize=$("#pageSize").val();
+                pageSize = $("#pageSize").val();
             });
 
         });
@@ -87,7 +103,6 @@
 <!-- header section end-->
 
 
-
 <!--    content begin -->
 <div class="main-content">
     <!-- page heading start-->
@@ -97,7 +112,9 @@
 
         <div class="directory-info-row">
             <!--            书籍开始循环显示-->
-            <input type="text" id="name"><input id="connectButton" type="button" value="Connect" onclick="connect()">
+            <input type="text" id="username">
+            <input id="connectButton" type="button" value="Connect" onclick="connect()">
+            <input type="text" id="tousername">
             <div id="messages"></div>
             <input type="text" id="message">
             <input type="button" value="send" onclick="sendToGroupChat()">

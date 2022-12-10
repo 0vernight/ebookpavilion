@@ -31,6 +31,8 @@ public class WebSocketHandler extends TextWebSocketHandler {    //BinaryWebSocke
         super.afterConnectionEstablished(session);
         webSocketSessions.add(session);
         System.out.println("键连接成功:" + session);
+        Map<String, Object> attributes = session.getAttributes();
+        System.out.println(attributes);
 //        System.out.println("idinfo:"+session.getId()+"\nname:"+name);
 
 //        ServerSocket serverSocket = new ServerSocket(83);
