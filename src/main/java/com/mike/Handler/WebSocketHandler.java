@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author: 23236
@@ -25,16 +27,46 @@ public class WebSocketHandler extends TextWebSocketHandler {    //BinaryWebSocke
     @Autowired
     User user;
     List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<String, List<WebSocketSession>> sessionMap = new ConcurrentHashMap<>();
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
+
         webSocketSessions.add(session);
+
+        System.out.println("afterConnectionEstablished进来了");
+        Map<String, Object> attributes1 = session.getAttributes();
+        System.out.println(attributes1);
+        System.out.println(session.getUri());
+
+        String[] usernames = (String[]) (session.getAttributes().get("usernames"));
+        String[] toUsernames = (String[]) (session.getAttributes().get("toUsernames"));
+        System.out.println("sockethandler里=" + usernames.toString() + toUsernames.toString());
+        String username = "";
+        List<WebSocketSession> listSession=Collections.synchronizedList(new ArrayList<>());
+        for (int i = 0; i < usernames.length; i++) {
+            username=usernames[i];
+            if (sessionMap.get(username) == null) {
+                listSession.add(session);
+                sessionMap.put(username,listSession);
+            } else {
+                listSession = sessionMap.get(username);
+                listSession.add(session);
+                sessionMap.replace(username, listSession);
+            }
+        }
+
+
+//        sessionMap.put(session.getAttributes().get("username").toString(),webSocketSessions);
         System.out.println("键连接成功:" + session);
         Map<String, Object> attributes = session.getAttributes();
         System.out.println(attributes);
 //        System.out.println("idinfo:"+session.getId()+"\nname:"+name);
 
+
+//        socket心跳还没了解
 //        ServerSocket serverSocket = new ServerSocket(83);
 //        try {
 //            while(true) {
@@ -56,30 +88,70 @@ public class WebSocketHandler extends TextWebSocketHandler {    //BinaryWebSocke
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         super.handleMessage(session, message);
-//        System.out.println("session:"+session);
-//        System.out.println("message:"+message);
 
-        for (WebSocketSession webSocketSession : webSocketSessions) {
-//            if (webSocketSession.getId() != session.getId()) {
-            webSocketSession.sendMessage(message);
-//            }
-        }
-        System.out.println("handlemessage处理成功:" + session + "\n" + message);
+        System.out.println("wsh:handlemessage进来了:" + session + "\n" + message);
+        String[] usernames = (String[]) (session.getAttributes().get("usernames"));
+        String[] toUsernames = (String[]) (session.getAttributes().get("toUsernames"));
 
         String payload = message.getPayload().toString();
+
+        System.out.println("获得参数=" + usernames.toString() + ":" + toUsernames.toString());
         System.out.println(payload);
+//        数据转换1
         GsonJsonParser gsonJsonParser = new GsonJsonParser();
         Map<String, Object> stringObjectMap = gsonJsonParser.parseMap(payload.toString());
         System.out.println("gson:" + stringObjectMap);
+
+//        数据转换2
         Gson gson = new Gson();
         String s = gson.toJson(stringObjectMap);
         System.out.println("tojson:" + s);
         System.out.println("payload==s:" + payload.equals(s));
+//        数据转换3
+        JSONObject jsonObject = new JSONObject(payload);
+        System.out.println(jsonObject.toMap().get("username") + ":" + jsonObject.toMap().get("message"));
 
         Map<String, String> map = new HashMap<>();
 
-        JSONObject jsonObject = new JSONObject(payload);
-        System.out.println(jsonObject.toMap().get("name") + ":" + jsonObject.toMap().get("message"));
+        sendMessage(usernames,toUsernames, message);
+
+
+    }
+
+    private void sendMessage(String[] origin,String[] targets, WebSocketMessage<?> message) {
+        try {
+            System.out.println("叫【" + targets[0] + "】的所有人，\n将会收到={" + message + "}的消息。");
+            String toUser="";
+            List<WebSocketSession> listSession;
+            for (int i = 0; i < targets.length; i++) {
+                toUser=targets[i];
+                listSession=sessionMap.get(toUser);
+                System.out.println("发送="+toUser);
+                System.out.println("链接数="+listSession.size());
+                for (WebSocketSession webSocketSession : listSession) {
+                    webSocketSession.sendMessage(message);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //    群发消息
+    private void pocketTransmission(Map<String, List<WebSocketSession>> stringListMap, WebSocketMessage<?> message) {
+        try {
+            for (Map.Entry<String, List<WebSocketSession>> entry : stringListMap.entrySet()) {
+                String username = entry.getKey();
+                System.out.println("给[" + username + "]姓名的人发送消息！");
+                List<WebSocketSession> sessionList = entry.getValue();
+                for (WebSocketSession webSocketSession : sessionList) {
+                    webSocketSession.sendMessage(message);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -96,7 +168,23 @@ public class WebSocketHandler extends TextWebSocketHandler {    //BinaryWebSocke
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
-        webSocketSessions.remove(session);
+        String[] usernames = (String[]) (session.getAttributes().get("usernames"));
+        String[] toUsernames = (String[]) (session.getAttributes().get("toUsernames"));
+        String user="";
+        List<WebSocketSession> listSession=Collections.synchronizedList(new ArrayList<>());
+        for (int i = 0; i < usernames.length; i++) {
+            user=usernames[i];
+            listSession=sessionMap.get(user);
+            if (listSession == null) {
+                continue;
+            }
+            listSession.remove(session);
+            if (listSession.size() == 0) {
+                sessionMap.remove(user);
+            }
+            sessionMap.replace(user,listSession);
+            System.out.println("删除了"+user+"的session还剩链接数="+listSession.size());
+        }
     }
 
     @Override
@@ -173,8 +261,6 @@ class SocketServerThread implements Runnable {
         }
     }
 }
-
-
 
 
 //    @Autowired

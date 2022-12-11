@@ -25,12 +25,12 @@
             url = "ws://" + ipPort + "//chatting";
             url = "ws://" + ipPort + "//chat";
             let username = document.getElementById("username").value;
-            let tousername = document.getElementById("tousername").value;
-            if (username == "" || tousername == "") {
+            let toUsername = document.getElementById("toUsername").value;
+            if (username == "" || toUsername == "") {
                 if (!confirm("连接用户不能为空,是否继续！"))
                     return;
             }
-            url += "/6339?fromUser=" + username + "&toUser=" + tousername;
+            url += "/6339?username=" + username + "&toUsername=" + toUsername;
             // 检查浏览器是否支持websocket
             if (typeof (WebSocket) == "undefined") alert("你的浏览器不支持websocket 服务请查证！");
             ws = new WebSocket(url);
@@ -40,9 +40,10 @@
                 console.log(e.data)
                 printMessage(e.data);
             }
-            document.getElementById("connectButton").disabled = true;
             document.getElementById("connectButton").value = "Connected";
+            document.getElementById("connectButton").disabled = true;
             document.getElementById("username").disabled = true;
+            document.getElementById("toUsername").disabled = true;
         }
 
         function printMessage(data) {
@@ -114,7 +115,7 @@
             <!--            书籍开始循环显示-->
             <input type="text" id="username">
             <input id="connectButton" type="button" value="Connect" onclick="connect()">
-            <input type="text" id="tousername">
+            <input type="text" id="toUsername">
             <div id="messages"></div>
             <input type="text" id="message">
             <input type="button" value="send" onclick="sendToGroupChat()">

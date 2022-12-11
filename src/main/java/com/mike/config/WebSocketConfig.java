@@ -28,10 +28,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         System.out.println(webSocketHandlerRegistry);
-        webSocketHandlerRegistry.addHandler(webSocketHandler, "/ws:chat/*","/ws-chat/*")
+        webSocketHandlerRegistry.addHandler(webSocketHandler, "/chat/*","/ws:chat/*","/ws-chat/*")
                 .addInterceptors(handshakeInterceptorCheck)
                 .setAllowedOriginPatterns("/**")
                 .setAllowedOrigins("*");
+//        setAllowedOrigins("*") **这个是关闭跨域校验，方便本地调试，线上推荐打开。
     }
 
 //    通过这个配置 spring boot 才能去扫描后面的关于 websocket 的注解

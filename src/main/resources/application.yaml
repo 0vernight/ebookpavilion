@@ -1,7 +1,7 @@
 
 user.avatar: classpath*:/mybatis/**/mapper/**/*.xml
 server:
-  port: 8080
+  port: 6339
 spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
