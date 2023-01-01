@@ -17,6 +17,11 @@ spring:
     image:
 #      location: static/favicon.ico
 #      bitdepth: 4
+#  security:
+#    user:
+#      name: mike
+#      password: ....
+
 
 mybatis:
   configuration:
@@ -39,4 +44,3 @@ mybatis-plus:
 #      #更改所有的表的前缀名字
 #      table-prefix: t
 #      id-type: auto
-

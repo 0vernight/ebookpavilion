@@ -69,7 +69,7 @@
                 </a>
             </div>
             <label class="checkbox">
-                <input type="checkbox" th:name="rememberme" th:each="cookie:${#request.cookies}"
+                <input type="checkbox" th:name="remember-me" th:each="cookie:${#request.cookies}"
                        th:if="${cookie.getName().equals('rememberme')}" th:checked="${cookie.getValue()}"  value="remember-me"> 记住密码
                 <span class="pull-right">
                     <a data-toggle="modal" href="#myModal"> 忘记密码?</a>

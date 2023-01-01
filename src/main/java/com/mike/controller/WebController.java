@@ -76,16 +76,16 @@ public class WebController {
     @RequestMapping({"/toShelf"})
     public String toShelf(HttpServletRequest request, Model model, @RequestParam(defaultValue = "1",value = "pageNum")Integer pageNum) {
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            model.addAttribute("warnmsg", "没登录不能查看书架，请先登录");
-            return "pages/main/login";
-        } else {
+//        if (user == null) {
+//            model.addAttribute("warnmsg", "没登录不能查看书架，请先登录");
+//            return "pages/main/login";
+//        } else {
             BaseResponse<PageInfo<Book>> response = shelfService.showShelf(shelf.setUserId(user.getId()),pageNum);
 
             model.addAttribute("pageInfo",response.getData() );
 //            model.addAttribute("bookList",response.getData());
             return "pages/main/shelf";
-        }
+//        }
     }
 
     @RequestMapping({"/toSearchBook"})
@@ -106,12 +106,12 @@ public class WebController {
     @RequestMapping({"/toAddBook"})
     public String toAddBook(HttpServletRequest request, Model model) {
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            model.addAttribute("warnmsg", "你还没等登录，请先登录");
-            return "pages/main/login";
-        } else {
+//        if (user == null) {
+//            model.addAttribute("warnmsg", "你还没等登录，请先登录");
+//            return "pages/main/login";
+//        } else {
             return "pages/main/addbook";
-        }
+//        }
     }
 
     @RequestMapping({"/toBook"})
@@ -119,14 +119,14 @@ public class WebController {
 //        System.out.println("toBook look at user="+request.getSession().getAttribute("user"));
 //        System.out.println("tobook session id="+request.getSession().getId());
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            model.addAttribute("warnmsg", "你还没等登录，请先登录");
-            return "pages/main/login";
-        } else {
+//        if (user == null) {
+//            model.addAttribute("warnmsg", "你还没等登录，请先登录");
+//            return "pages/main/login";
+//        } else {
             BaseResponse<List> response = bookService.selectMyAll(user.getId());
             model.addAttribute("bookList", response.getData());
             return "pages/main/Book";
-        }
+//        }
     }
     @RequestMapping({"/toDetail"})
     public String toDetail(Book book,HttpServletRequest request, Model model) {

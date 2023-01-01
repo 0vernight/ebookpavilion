@@ -1,5 +1,7 @@
 package com.mike.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.mike.DTO.BaseResponse;
 import com.mike.bean.User;
 import com.mike.service.UserService;
@@ -15,10 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
@@ -50,7 +49,7 @@ public class UserController {
     @RequestMapping("/login")
     public BaseResponse<User> login(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
 //        前端用Ajax请求判断用户名和密码对了才跳转到首页，否则让用户重新输入“不跳转”
-        System.out.println("rememberme="+request.getParameter("rememberme"));
+        System.out.println("remember-me="+request.getParameter("remember-me"));
         String password = user.getPassword();
         BaseResponse<User> baseResponse = userService.loginByEmailPass(user);
         System.out.println("password down="+ password);
@@ -59,6 +58,15 @@ public class UserController {
             Cookie cookieUsername = new Cookie("username", baseResponse.getData().getUsername());
             Cookie cookieEmail = new Cookie("email", baseResponse.getData().getEmail());
             Cookie rememberme = new Cookie("rememberme", request.getParameter("rememberme")==null?"false":"true");
+            Date date = new Date(System.currentTimeMillis());
+            Algorithm algorithm = Algorithm.HMAC256(baseResponse.getData().getPassword());
+            // 附带username信息
+            String token= JWT.create()
+                    .withClaim("username", baseResponse.getData().getUsername())
+                    .withExpiresAt(date)
+                    .sign(algorithm);
+            System.out.println("token="+token);
+            Cookie cookietoken = new Cookie("token", token);
             if (request.getParameter("rememberme")!=null) {
                 Cookie cookiePassword = new Cookie("password", password);
                 cookiePassword.setMaxAge(60*60*24*7);
@@ -71,16 +79,38 @@ public class UserController {
             cookieUsername.setMaxAge(60*60*24*7);
             cookieEmail.setMaxAge(60*60*24*7);
             rememberme.setMaxAge(60*60*24*7);
+            cookietoken.setMaxAge(60*60*24*7);
             response.addCookie(cookieUsername);
             response.addCookie(cookieEmail);
             response.addCookie(rememberme);
+            response.addCookie(cookietoken);
 //            session中保存整个user
             request.getSession().setAttribute("user",baseResponse.getData());
 //            System.out.println("login sessionId="+request.getSession().getId());
 //            System.out.println("sessionGetAttribute="+request.getSession().getAttribute("user"));
 //            System.out.println(baseResponse.getData());
         }
+//        BaseResponse loginsecur = userService.login(user.getUsername(), user.getPassword());
+//        System.out.println(loginsecur);
         return baseResponse;
+
+
+//        通过验证成功后返回token的登录方式
+//        Map<String, Object> map = new HashMap<>();
+//        String username = sysUser.getUsername();
+//        String password = sysUser.getPassword();
+//        // 省略 账号密码验证
+//        // 验证成功后发送token
+//        String token = JwtUtil.sign(username,password);
+//        if (token != null){
+//            map.put("code", "200");
+//            map.put("message","认证成功");
+//            map.put("token", token);
+//            return map;
+//        }
+//        map.put("code", "403");
+//        map.put("message","认证失败");
+//        return map;
     }
 
 

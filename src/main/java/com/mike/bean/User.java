@@ -43,5 +43,6 @@ public class User<T>  implements Serializable {
     private int contribution;
     private String address;
     private int status;
+    private User user;
 
 }

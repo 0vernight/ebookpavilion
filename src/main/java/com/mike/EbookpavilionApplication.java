@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import java.util.Map;
 @SpringBootApplication
 @ServletComponentScan( "com.mike.servlet")      //自定义servlet
 //@MapperScan("com.mike.mapper")
+@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
+
 public class EbookpavilionApplication {
 
     public static void main(String[] args) {

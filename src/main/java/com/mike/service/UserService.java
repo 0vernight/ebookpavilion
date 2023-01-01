@@ -2,6 +2,7 @@ package com.mike.service;
 
 import com.mike.DTO.BaseResponse;
 import com.mike.bean.User;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,4 +35,6 @@ public interface UserService {
     BaseResponse<User> searchByName(User user);
 
     BaseResponse<User> searchByEmail(User user);
+
+    public BaseResponse login(String username, String password) throws AuthenticationException;
 }

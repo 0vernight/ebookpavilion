@@ -1,5 +1,6 @@
 package com.mike.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mike.bean.User;
 import org.apache.ibatis.annotations.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
 
 //    这个在xml配置文件里面写的。
 //    @Select("Select * from user")

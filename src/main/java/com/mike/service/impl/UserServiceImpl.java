@@ -3,13 +3,13 @@ package com.mike.service.impl;
 import com.mike.DTO.BaseResponse;
 import com.mike.bean.User;
 import com.mike.mapper.UserMapper;
+import com.mike.service.LoginUserDetailsService;
 import com.mike.service.UserService;
-import com.mike.utils.JudgeFormat;
-import com.mike.utils.MD5Utils;
-import com.mike.utils.UUIDUtils;
-import com.mike.utils.foperation;
+import com.mike.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     User user;
+
+    @Autowired
+    LoginUserDetailsService loginUserDetailsService;
+    @Autowired
+    JwtUtil jwtUtil;
 
 //        想要判断前端的返回来的数据没有成功
     JudgeFormat judgeFormat;
@@ -198,6 +203,16 @@ public class UserServiceImpl implements UserService {
         }else {
             response.setOkDaTa("用户数据", userMapper.searchByEmail(user));
         }
+        return response;
+    }
+
+    @Override
+    public BaseResponse login(String username, String password) throws AuthenticationException {
+        UserDetails userDetails = loginUserDetailsService.loadUserByUsername(username);
+        String token = jwtUtil.generateToken(userDetails);
+        System.out.println("生成的token="+token);
+        BaseResponse<String> response=new BaseResponse<>();
+        response.setOkDaTa("token",token);
         return response;
     }
 
